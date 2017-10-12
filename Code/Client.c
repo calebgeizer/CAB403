@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
 	if (argc > 2){
 		port = atoi(argv[2]);
-	} else port = port;
+	} else port = PORT;
 
 
 	if ((he=gethostbyname(argv[1])) == NULL) {  /* get the host info */
