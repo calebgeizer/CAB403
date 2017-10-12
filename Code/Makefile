@@ -1,2 +1,2 @@
-Server: Server.c test.c
-	gcc -o Server Server.c test.c
+Server: Server.c Authentication.c
+	gcc -o Server Server.c Authentication.c

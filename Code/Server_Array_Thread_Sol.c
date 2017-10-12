@@ -3,7 +3,6 @@
 *  Collected and modified for teaching purpose only by Jinglan Zhang, Aug. 2006
 */
 
-#include "Authentication.h"
 
 #include <arpa/inet.h>
 #include <stdio.h> 
@@ -15,33 +14,51 @@
 #include <sys/socket.h> 
 #include <sys/wait.h> 
 #include <unistd.h>
+#include <errno.h>
 
-	#define MYPORT 12345    /* the port users will be connecting to */
 
+	#define ARRAY_SIZE 30  /* Size of array to receive */
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
 
-int main(int argc, char *argv[])
-{
-	int sockfd, new_fd,port;  /* listen on sock_fd, new connection on new_fd */
+	#define RETURNED_ERROR -1
+
+
+void Send_Array_Data(int socket_id) {
+
+	int i=0;
+	/* Create an array of squares of first 30 whole numbers */
+	int simpleArray[ARRAY_SIZE] = {0};
+	for (i = 0; i < ARRAY_SIZE; i++) {
+		simpleArray[i] = i * i;
+	}
+
+	uint16_t statistics;  
+	for (i = 0; i < ARRAY_SIZE; i++) {
+		statistics = htons(simpleArray[i]);
+		send(socket_id, &statistics, sizeof(uint16_t), 0);
+	}
+}
+
+
+int main(int argc, char *argv[]) {
+
+	/* Thread and thread attributes */
+	pthread_t client_thread;
+	pthread_attr_t attr;
+
+
+	int sockfd, new_fd;  /* listen on sock_fd, new connection on new_fd */
 	struct sockaddr_in my_addr;    /* my address information */
 	struct sockaddr_in their_addr; /* connector's address information */
 	socklen_t sin_size;
+	int i=0;
 
-/*	if (argc < 1)
-	{
-		fprintf(stderr,"usage: server portNumber");
+	/* Get port number for server to listen on */
+	if (argc != 2) {
+		fprintf(stderr,"usage: client port_number\n");
+		exit(1);
 	}
-*/
-	if (argc <= 1)
-	{
-		port = MYPORT;
-	}
-
-	if (argc > 1)
-	{
-		port = atoi(argv[1]);
-	}else port = MYPORT;
 
 	/* generate the socket */
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -51,7 +68,7 @@ int main(int argc, char *argv[])
 
 	/* generate the end point */
 	my_addr.sin_family = AF_INET;         /* host byte order */
-	my_addr.sin_port = htons(port);     /* short, network byte order */
+	my_addr.sin_port = htons(atoi(argv[1]));     /* short, network byte order */
 	my_addr.sin_addr.s_addr = INADDR_ANY; /* auto-fill with my IP */
 		/* bzero(&(my_addr.sin_zero), 8);   ZJL*/     /* zero the rest of the struct */
 
@@ -68,7 +85,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("server starts listening ...\n");
+	printf("server starts listnening ...\n");
 
 	/* repeat: accept, send, close the connection */
 	/* for every accepted connection, use a sepetate process or thread to serve it */
@@ -81,16 +98,19 @@ int main(int argc, char *argv[])
 		}
 		printf("server: got connection from %s\n", \
 			inet_ntoa(their_addr.sin_addr));
-		if (!fork()) { /* this is the child process */
-			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
-				perror("send");
-			int result = test("111111");
-			printf("%d\n", result);
-			close(new_fd);
-			exit(0);
-		}
-		close(new_fd);  /* parent doesn't need this */
 
-		while(waitpid(-1,NULL,WNOHANG) > 0); /* clean up child processes */
+		//Create a thread to accept client
+				
+		pthread_attr_t attr;
+		pthread_attr_init(&attr);
+		pthread_create(&client_thread, &attr, Send_Array_Data, new_fd);
+
+		pthread_join(client_thread,NULL);
+
+		if (send(new_fd, "All of array data sent by server\n", 40 , 0) == -1)
+				perror("send");
+
 	}
+
+	close(new_fd);  
 }
