@@ -3,7 +3,7 @@
 *  Collected and modified for teaching purpose only by Jinglan Zhang, Aug. 2006
 */
 
-
+#include "test.h"
 #include <arpa/inet.h>
 #include <stdio.h> 
 #include <stdlib.h> 
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("server starts listnening ...\n");
+	printf("server starts listening ...\n");
 
 	/* repeat: accept, send, close the connection */
 	/* for every accepted connection, use a sepetate process or thread to serve it */
@@ -83,6 +83,8 @@ int main(int argc, char *argv[])
 		if (!fork()) { /* this is the child process */
 			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
 				perror("send");
+			int result = test("111111");
+			printf("%d\n", result);
 			close(new_fd);
 			exit(0);
 		}
