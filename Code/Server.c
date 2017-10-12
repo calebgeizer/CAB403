@@ -27,12 +27,17 @@ int main(int argc, char *argv[])
 	struct sockaddr_in their_addr; /* connector's address information */
 	socklen_t sin_size;
 
-	if (argc < 1)
+/*	if (argc < 1)
 	{
 		fprintf(stderr,"usage: server portNumber");
 	}
+*/
+	if (argc <= 1)
+	{
+		port = MYPORT;
+	}
 
-	if (argc >= 1)
+	if (argc > 1)
 	{
 		port = atoi(argv[1]);
 	}else port = MYPORT;
@@ -62,7 +67,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("server starts listnening ...%d\n",port);
+	printf("server starts listnening ...\n");
 
 	/* repeat: accept, send, close the connection */
 	/* for every accepted connection, use a sepetate process or thread to serve it */
