@@ -61,6 +61,8 @@ char *Receive_Array_Int_Data(int socket_identifier, int size) {
 char* checkMessage(char* message){
 	//checks what the message is to give the client a response
 
+	// WRITE CODE HERE
+
 	return message;
 }
 

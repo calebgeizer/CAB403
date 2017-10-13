@@ -33,6 +33,7 @@ void Send_Array_Data(int socket_id, char *myArray) {
     send(socket_id, myArray, sizeof(myArray), 0);
 }
 
+// asks the user to respond
 char* response(){
     int max = 20;
     char* name = (char*) malloc(max); /* allocate buffer */
@@ -68,6 +69,7 @@ char* response(){
     return response;
 }
 
+// Sends the server a message and gets a response
 char* sendMessage(int argc, char *argv[],char *message){
     int sockfd, numbytes, port;
     char buf[MAXDATASIZE];
@@ -109,24 +111,18 @@ char* sendMessage(int argc, char *argv[],char *message){
         exit(1);
     }
 
-
     char *simpleArray = message;
-    
-    Send_Array_Data(sockfd, simpleArray);
+    Send_Array_Data(sockfd, simpleArray); //Send Message
 
+    // Get a response
     if ((numbytes=recv(sockfd, buf, MAXDATASIZE, 0)) == -1) {
         perror("recv");
         exit(1);
     }
-    
     buf[numbytes] = '\0';
-
     char *response = buf;
 
-
-
     close(sockfd);
-
     return response;
 }
 
@@ -134,6 +130,9 @@ int main(int argc, char *argv[])
 {
 	int x = 0;
 
+	// WRITE CODE HERE
+
+	//Temp message loop
 	while(x == 0){
 		char *text = response();
 
