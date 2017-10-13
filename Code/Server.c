@@ -3,7 +3,6 @@
 *  Collected and modified for teaching purpose only by Jinglan Zhang, Aug. 2006
 */
 
-
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,11 +14,39 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+
+	#define MAXDATASIZE 500
+	#define secondArray 2
+
 	#define MYPORT 12345    /* the port users will be connecting to */
 	#define ARRAY_SIZE 30 
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
-	#define MAXDATASIZE 100 /* max number of bytes we can get at once */
+
+char* checkMessage(char* message){
+	//checks what the message is to give the client a response
+
+	// WRITE CODE HERE
+	int user = 0;
+	user = authUser(message);
+
+	printf("%d\n", user);
+
+	if (user == 1)
+	{
+		return "success";
+	}
+	if (user == 0)
+	{
+		return "failed";
+	}
+	hangman();
+
+	return message;
+}
+
+
+
 
 char *Receive_Array_Int_Data(int socket_identifier, int size) {
     int number_of_bytes, i=0;
@@ -58,12 +85,143 @@ char *Receive_Array_Int_Data(int socket_identifier, int size) {
 }
 
 
-char* checkMessage(char* message){
-	//checks what the message is to give the client a response
 
-	// WRITE CODE HERE
+char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 
-	return message;
+	int i, stime;
+	long ltime;
+
+	/* get the current calendar time */
+	ltime = time(NULL);
+	stime = (unsigned) ltime/2;
+	srand(stime);
+
+	//select random word
+	int x = rand() % size;
+	int y = rand() % size;
+
+	//printf("%d %d\n", x,y);
+
+	char *word1 = hangmanWords[x][0];
+	char *word2 = hangmanWords[y][0];
+	//printf("%s %s\n", word1, word2);
+
+	char* finalText;
+	finalText = malloc(strlen(word1)+1+4); /* make space for the new string (should check the return value ...) */
+	strcpy(finalText, word1); /* copy name into the new var */
+	strcat(finalText, " ");
+	strcat(finalText, word2); /* add the extension */
+
+	//printf("%s\n", finalText);
+	return finalText;
+}
+
+
+int grabFile(char* result[MAXDATASIZE][secondArray],char* filename, char* firstDelim, char* secondDelim){
+	FILE *ptr_file;
+
+	char buf[1000];
+
+
+	char *token1;
+	int i =0 ,j=0;
+	ptr_file =fopen(filename,"r");
+	
+	if (!ptr_file)
+		return 0;
+
+	int size = 0;
+	char *data[MAXDATASIZE];
+
+	for (int i = 0; i < 1000; ++i)
+	{
+		if (fgets(buf,1000, ptr_file)!=NULL)
+		{
+			data[i]=strndup(buf,30);
+			//printf("%s\n", data[i]);
+			size++;
+		}
+	}
+
+	//printf("%d\n", size);
+
+	for (int i = 0; i < size; ++i)
+	{
+		int length = sizeof(data[i]);
+		char *input;
+		input = data[i];
+		token1=strtok(input,firstDelim);	
+		if(token1){
+			result[i][j]=token1;
+			//printf("%s\n", result[i][j]);
+			j++;
+		}	
+		token1 =strtok(NULL,secondDelim);
+		if (token1)
+		{
+			result[i][j]=token1;
+			//printf("%s\n", result[i][j]);
+			j--;
+		}
+
+	}
+	
+	fclose(ptr_file);
+
+	return size;
+}
+
+int authUser(char* username){
+	char* authentication[MAXDATASIZE][secondArray];
+	int size = 0;
+	int success = 0;
+
+	size = grabFile(authentication,"Authentication.txt","\t","\n");
+
+	for (int i = 0; i < size; ++i)
+	{
+		char *currentUsername = authentication[i][0];
+		if (*currentUsername == *username)
+		{
+			success = 1;
+		}
+	}
+
+	return success;		
+}
+
+
+int authPass(char* password){
+	char* authentication[MAXDATASIZE][secondArray];
+	int size = 0;
+	int success = 0;
+
+	size = grabFile(authentication,"Authentication.txt","\t","\n");
+
+	for (int i = 0; i < size; ++i)
+	{
+		if (authentication[i][1] == password)
+		{
+			success = 1;
+		}
+	}
+
+	return success;		
+}
+
+int hangman(){
+	char* hangman[MAXDATASIZE][secondArray];
+
+	int size = 0;
+
+	size = grabFile(hangman,"hangman_text.txt",",",",");
+
+
+	char* finalText = twoWords(hangman,size);	
+
+	printf("%s\n", finalText);
+
+	return 0;
 }
 
 
@@ -146,4 +304,3 @@ int main(int argc, char *argv[])
 		while(waitpid(-1,NULL,WNOHANG) > 0); /* clean up child processes */
 	}
 }
-

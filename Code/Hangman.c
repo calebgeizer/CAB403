@@ -49,34 +49,17 @@ int main() {
 		return 1;
 
 	int size = 0;
-/*
-	while (fgets(buf,1000, ptr_file)!=NULL) {
-		
-		token1=strtok(buf,",");	
-		hangmanWords[j][i]=token1;	
-		//printf("%s\n",hangmanWords[j][i]);
-		//printf("%d\n", j);
-		i++;
-		token1 =strtok(NULL,"\n");
-		hangmanWords[j][i]=token1;		
-		printf("%s\n", hangmanWords[0][0]);
-		printf("%s\n",hangmanWords[j][0]);
-		j++;
-		i--;		
-		size++;
-	}
-*/
 
 	char *hangman[MAXDATASIZE];
 
-for (int i = 0; i < 1000; ++i)
-{
-	if(fgets(buf,1000,ptr_file)!=NULL){
-		hangman[i]=strndup(buf, 30);
-		//printf("%s\n", hangman[i]);
-		size++;
+	for (int i = 0; i < 1000; ++i)
+	{
+		if(fgets(buf,1000,ptr_file)!=NULL){
+			hangman[i]=strndup(buf, 30);
+			//printf("%s\n", hangman[i]);
+			size++;
+		}
 	}
-}
 	
 	//printf("%d\n", size);
 
