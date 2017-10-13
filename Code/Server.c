@@ -58,17 +58,20 @@ char *Receive_Array_Int_Data(int socket_identifier, int size) {
 }
 
 
+char* sendReceiveMessage(int argc, char *argv[]){
 
+}
 
 
 
 
 int main(int argc, char *argv[])
 {
-	int sockfd, new_fd,port;  /* listen on sock_fd, new connection on new_fd */
+		int sockfd, new_fd,port;  /* listen on sock_fd, new connection on new_fd */
 	struct sockaddr_in my_addr;    /* my address information */
 	struct sockaddr_in their_addr; /* connector's address information */
 	socklen_t sin_size;
+	char *results;
 
 /*	if (argc < 1)
 	{
@@ -110,7 +113,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("server starts listnening ...\n");
+	printf("server starts listening ...\n");
 
 	/* repeat: accept, send, close the connection */
 	/* for every accepted connection, use a sepetate process or thread to serve it */
@@ -124,10 +127,14 @@ int main(int argc, char *argv[])
 		printf("server: got connection from %s\n", \
 			inet_ntoa(their_addr.sin_addr));
 		if (!fork()) { /* this is the child process */
-			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
+
+		
+			results = Receive_Array_Int_Data(new_fd,  ARRAY_SIZE);
+			printf("%s\n", results);
+
+			if (send(new_fd, results, sizeof(results), 0) == -1)
 				perror("send");
-			char *results = Receive_Array_Int_Data(new_fd,  ARRAY_SIZE);
-			printf("Received: %s\n",results);
+
 			close(new_fd);
 			exit(0);
 		}
