@@ -4,13 +4,21 @@
 	#define MAXDATASIZE 500
 	#define hangman_text 2
 
-char twoWords(char *hangmanWords[MAXDATASIZE][hangman_text],int size){
+char* twoWords(char *hangmanWords[MAXDATASIZE][hangman_text],int size){
+
+	int i, stime;
+	long ltime;
+
+	/* get the current calendar time */
+	ltime = time(NULL);
+	stime = (unsigned) ltime/2;
+	srand(stime);
 
 	//select random word
 	int x = rand() % size;
 	int y = rand() % size;
 
-	//printf("%d %d\n", x,y);
+	printf("%d %d\n", x,y);
 
 	char *word1 = hangmanWords[x][0];
 	char *word2 = hangmanWords[y][0];
@@ -19,10 +27,11 @@ char twoWords(char *hangmanWords[MAXDATASIZE][hangman_text],int size){
 	char* finalText;
 	finalText = malloc(strlen(word1)+1+4); /* make space for the new string (should check the return value ...) */
 	strcpy(finalText, word1); /* copy name into the new var */
+	strcat(finalText, " ");
 	strcat(finalText, word2); /* add the extension */
 
 	//printf("%s\n", finalText);
-	return *finalText;
+	return finalText;
 }
 
 int main() {
@@ -69,7 +78,7 @@ for (int i = 0; i < 1000; ++i)
 	}
 }
 	
-	printf("%d\n", size);
+	//printf("%d\n", size);
 
 
 	for (int i = 0; i < size; ++i)
@@ -95,18 +104,13 @@ for (int i = 0; i < 1000; ++i)
 
 
 
-	for (int i = 0; i < size; ++i)
-	{
-		printf("%s\n", hangmanWords[i][0]);
-		printf("%d\n", i);
-	}
-
 
 
 	//printf("%d\n", size);
 
-	//char finalText = twoWords(hangmanWords,size);
+	char* finalText = twoWords(hangmanWords,size);
 	
+	printf("%s\n", finalText);
 		
 	fclose(ptr_file);
 	
