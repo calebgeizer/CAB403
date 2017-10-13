@@ -1,17 +1,32 @@
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <errno.h> 
-#include <string.h> 
-#include <netdb.h> 
-#include <sys/types.h> 
-#include <netinet/in.h> 
-#include <sys/socket.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <netdb.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <unistd.h>
 
 	#define PORT 12345    /* the port client will be connecting to */
 
 	#define MAXDATASIZE 100 /* max number of bytes we can get at once */
+void Send_Array_Data(int socket_id, char *myArray) {
+	int i=0;
+	char statistics;  
+	/*for (i = 0; i < 2; i++) {
+		printf("%c\n", myArray[i]);
+		statistics = htons(myArray[i]);
+		//send(socket_id, &statistics, sizeof(uint16_t), 0);
+	}*/
 
+
+
+	send(socket_id, myArray, sizeof(myArray), 0);
+
+
+	
+}
 
 int main(int argc, char *argv[])
 {
@@ -55,10 +70,12 @@ int main(int argc, char *argv[])
 		perror("recv");
 		exit(1);
 	}
-
+	
 	buf[numbytes] = '\0';
 
-	printf("Received: %s",buf);
+	char *simpleArray = "yes";
+
+	Send_Array_Data(sockfd, simpleArray);
 
 	close(sockfd);
 

@@ -3,23 +3,65 @@
 *  Collected and modified for teaching purpose only by Jinglan Zhang, Aug. 2006
 */
 
-#include "Authentication.h"
 
 #include <arpa/inet.h>
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <errno.h> 
-#include <string.h> 
-#include <sys/types.h> 
-#include <netinet/in.h> 
-#include <sys/socket.h> 
-#include <sys/wait.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 	#define MYPORT 12345    /* the port users will be connecting to */
-
+	#define ARRAY_SIZE 30 
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
+	#define MAXDATASIZE 100 /* max number of bytes we can get at once */
+
+char *Receive_Array_Int_Data(int socket_identifier, int size) {
+    int number_of_bytes, i=0;
+    uint16_t statistics;
+
+    
+    int sockfd, numbytes, port;
+	char buf[MAXDATASIZE];
+	struct hostent *he;
+	struct sockaddr_in their_addr; /* connector's address information*/
+	//
+
+	if ((numbytes=recv(socket_identifier, buf, MAXDATASIZE, 0)) == -1) {
+		perror("recv");
+		exit(1);
+	}
+
+	buf[numbytes] = '\0';
+	char *results = buf;
+
+
+/*
+	char *results = malloc(sizeof(char)*size);
+	for (i=0; i < size; i++) {
+		if ((number_of_bytes=recv(socket_identifier, &statistics, sizeof(uint16_t), 0))
+		         == RETURNED_ERROR) {
+			perror("recv");
+			exit(EXIT_FAILURE);			
+		    
+		}
+		results[i] = ntohs(statistics);
+	}
+*/
+
+	return results;
+}
+
+
+
+
+
+
 
 int main(int argc, char *argv[])
 {
@@ -68,7 +110,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("server starts listening ...\n");
+	printf("server starts listnening ...\n");
 
 	/* repeat: accept, send, close the connection */
 	/* for every accepted connection, use a sepetate process or thread to serve it */
@@ -84,12 +126,8 @@ int main(int argc, char *argv[])
 		if (!fork()) { /* this is the child process */
 			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
 				perror("send");
-
-
-			int result = test("111111");
-
-			
-			printf("%d\n", result);
+			char *results = Receive_Array_Int_Data(new_fd,  ARRAY_SIZE);
+			printf("Received: %s\n",results);
 			close(new_fd);
 			exit(0);
 		}
@@ -98,3 +136,4 @@ int main(int argc, char *argv[])
 		while(waitpid(-1,NULL,WNOHANG) > 0); /* clean up child processes */
 	}
 }
+
