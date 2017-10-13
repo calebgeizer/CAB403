@@ -5,10 +5,6 @@
 	#define hangman_text 2
 
 
-char twoWords(){
-
-}
-
 int main() {
 	FILE *ptr_file;
 
@@ -25,10 +21,15 @@ int main() {
 
 	while (fgets(buf,1000, ptr_file)!=NULL) {
 		
-		token1=strtok(buf,"		");		
+		token1=strtok(buf,",");		
 		hangmanWords[j][i]=token1;		
 		printf("%s\n",hangmanWords[j][i]);
 		i++;
+		token1 =strtok(NULL,"		");
+		hangmanWords[j][i]=token1;		
+		printf("%s\n",hangmanWords[j][i]);
+		j++;
+		i--;		
 	}
 	
 		
