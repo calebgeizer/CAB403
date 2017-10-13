@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("server starts listnening ...\n");
+	printf("server starts listening ...\n");
 
 	/* repeat: accept, send, close the connection */
 	/* for every accepted connection, use a sepetate process or thread to serve it */
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 
 			/* Call method to recieve array data */
 			char *results = Receive_Array_Int_Data(new_fd,  ARRAY_SIZE);
-			printf("Received: %s",results);
+			printf("Received: %s\n",results);
 
 
 			/* Print out the array results sent by client 

@@ -22,7 +22,9 @@ void Send_Array_Data(int socket_id, char *myArray) {
 		//send(socket_id, &statistics, sizeof(uint16_t), 0);
 	}*/
 
-	send(socket_id, "Hello, world!\n", 14, 0);
+
+
+	send(socket_id, myArray, sizeof(myArray), 0);
 
 
 	printf("%s\n", myArray);
@@ -67,7 +69,7 @@ int main(int argc, char *argv[]) {
 		simpleArray[i] = i * i;
 	} */
 
-	char simpleArray[3] = "yes";
+	char *simpleArray = "yes";
 
 	Send_Array_Data(sockfd, simpleArray);
 
