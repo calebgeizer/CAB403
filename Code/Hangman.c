@@ -5,12 +5,16 @@
 	#define hangman_text 2
 
 
+char twoWords(){
+
+}
+
 int main() {
 	FILE *ptr_file;
 
 	char buf[1000];
 	
-	char *username[MAXDATASIZE][hangman_text];
+	char *hangmanWords[MAXDATASIZE][hangman_text];
 	
 	char *token1;
 	int i =0 ,j=0;
@@ -22,8 +26,8 @@ int main() {
 	while (fgets(buf,1000, ptr_file)!=NULL) {
 		
 		token1=strtok(buf,"		");		
-		username[j][i]=token1;		
-		printf("%s\n",username[j][i]);
+		hangmanWords[j][i]=token1;		
+		printf("%s\n",hangmanWords[j][i]);
 		i++;
 	}
 	
