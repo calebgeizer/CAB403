@@ -1,11 +1,10 @@
 #include<stdio.h>
 #include <stdlib.h>
 #include <string.h>
-	#define MAXDATASIZE 200
+	#define MAXDATASIZE 250
 	#define hangman_text 2
-/*
-char twoWords(char *hangmanWords[MAXDATASIZE][hangman_text]){
-	int size = sizeof(hangmanWords);
+
+char twoWords(char *hangmanWords[MAXDATASIZE][hangman_text],int size){
 
 	//select random word
 	int x = rand()%size;
@@ -21,13 +20,13 @@ char twoWords(char *hangmanWords[MAXDATASIZE][hangman_text]){
 	char *word2 = hangmanWords[y][0];
 
 	char* finalText;
-	finalText = malloc(strlen(word1)+1+4); *//* make space for the new string (should check the return value ...) */
-	//strcpy(finalText, word1); /* copy name into the new var */
-	//strcat(finalText, word2); /* add the extension */
+	finalText = malloc(strlen(word1)+1+4); /* make space for the new string (should check the return value ...) */
+	strcpy(finalText, word1); /* copy name into the new var */
+	strcat(finalText, word2); /* add the extension */
 
-	//printf("%s\n", finalText);
-	//return *finalText;
-//}
+	printf("%s\n", finalText);
+	return *finalText;
+}
 
 int main() {
 	FILE *ptr_file;
@@ -43,6 +42,8 @@ int main() {
 	if (!ptr_file)
 		return 1;
 
+	int size = 0;
+
 	while (fgets(buf,1000, ptr_file)!=NULL) {
 		
 		token1=strtok(buf,",");		
@@ -54,7 +55,10 @@ int main() {
 		printf("%s\n",hangmanWords[j][i]);
 		j++;
 		i--;		
+		size++;
 	}
+
+	char finalText = twoWords(hangmanWords,size);
 	
 		
 	fclose(ptr_file);
