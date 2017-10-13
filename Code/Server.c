@@ -58,11 +58,11 @@ char *Receive_Array_Int_Data(int socket_identifier, int size) {
 }
 
 
-char* sendReceiveMessage(int argc, char *argv[]){
+char* checkMessage(char* message){
+	//checks what the message is to give the client a response
 
+	return message;
 }
-
-
 
 
 int main(int argc, char *argv[])
@@ -128,11 +128,12 @@ int main(int argc, char *argv[])
 			inet_ntoa(their_addr.sin_addr));
 		if (!fork()) { /* this is the child process */
 
-		
 			results = Receive_Array_Int_Data(new_fd,  ARRAY_SIZE);
 			printf("%s\n", results);
 
-			if (send(new_fd, results, sizeof(results), 0) == -1)
+			char* answer = checkMessage(results);
+
+			if (send(new_fd, answer, sizeof(answer), 0) == -1)
 				perror("send");
 
 			close(new_fd);
