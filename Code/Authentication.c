@@ -96,7 +96,6 @@ void authentication(char* username, char* password){
 
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
 
-		
 }
 
 void hangman(){

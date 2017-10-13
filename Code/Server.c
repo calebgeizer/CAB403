@@ -23,27 +23,6 @@
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
 
-char* checkMessage(char* message){
-	//checks what the message is to give the client a response
-
-	// WRITE CODE HERE
-	int user = 0;
-	user = authUser(message);
-
-	printf("%d\n", user);
-
-	if (user == 1)
-	{
-		return "success";
-	}
-	if (user == 0)
-	{
-		return "failed";
-	}
-	hangman();
-
-	return message;
-}
 
 
 
@@ -181,7 +160,7 @@ int authUser(char* username){
 	for (int i = 0; i < size; ++i)
 	{
 		char *currentUsername = authentication[i][0];
-		if (*currentUsername == *username)
+		if (strncmp(currentUsername,username,7))
 		{
 			success = 1;
 		}
@@ -222,6 +201,41 @@ int hangman(){
 	printf("%s\n", finalText);
 
 	return 0;
+}
+
+char* checkMessage(char* message){
+	//checks what the message is to give the client a response
+
+	// WRITE CODE HERE
+
+	char *token1;
+	char *label;
+	char *text;
+
+	label = &message[0];
+
+	text = message + 1;
+
+
+	printf("%s\n", text);
+
+
+	if (strncmp(label,"a",1))
+	{
+		int user = 0;
+		user = authUser(text);
+
+		printf("%d\n", user);
+
+		if (user == 1)
+		{
+			return "success";
+		}
+	}
+
+	//hangman();
+
+	return text;
 }
 
 
@@ -289,7 +303,7 @@ int main(int argc, char *argv[])
 		if (!fork()) { /* this is the child process */
 
 			results = Receive_Array_Int_Data(new_fd,  ARRAY_SIZE);
-			printf("%s\n", results);
+			//printf("%s\n", results);
 
 			char* answer = checkMessage(results);
 

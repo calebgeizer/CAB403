@@ -132,12 +132,25 @@ int main(int argc, char *argv[])
 
 	// WRITE CODE HERE
 
+
 	//Temp message loop
 	while(x == 0){
+
+	printf("Username:\n");
 		char *text = response();
 
-	    char *serverResponse = sendMessage(argc, argv, text);
-	    printf("%s\n", serverResponse);
+		int length = sizeof(text);
+		length = length + 1;
+		char *us = "a";
+		char usernameMessage[length];
+		strcpy(usernameMessage,us);
+		strcat(usernameMessage,text);
+
+		char *serverResponse = sendMessage(argc,argv, usernameMessage);
+		// char *text = response();
+
+	 //    char *serverResponse = sendMessage(argc, argv, text);
+	     printf("%s\n", serverResponse);
 	}
 
     return 0;
