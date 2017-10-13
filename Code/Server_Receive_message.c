@@ -128,12 +128,12 @@ int main(int argc, char *argv[])
 			/* Print out the array results sent by client 
 			for (i=0; i < ARRAY_SIZE; i++) {
 				printf("Value of index[%d] = %d\n", i, results[i]);
-			}			
+			}			*/
 
-			free(results);
+			//free(results);
 
 			if (send(new_fd, "All of array data received by server\n", 40 , 0) == -1)
-				perror("send");*/
+				perror("send");
 			close(new_fd);
 			exit(0);
 		}
