@@ -19,6 +19,14 @@ void quit() /* write error message and quit */
     exit(1);
 }
 
+char* concat(char* first, char* second){
+    char* concatinated;
+    concatinated = malloc(strlen(first)+strlen(second)); /* make space for the new string (should check the return value ...) */
+    strcpy(concatinated, first); /* copy name into the new var */
+    strcat(concatinated, second); /* add the extension */
+    return concatinated;
+}
+
 void Send_Array_Data(int socket_id, char *myArray) {
     int i=0;
     char statistics;  
@@ -128,49 +136,45 @@ char* sendMessage(int argc, char *argv[],char *message){
 
 int main(int argc, char *argv[])
 {
+    char *text;
+    char *username = "none";
 
 	//CHECK USERNAME
 	int x = 0;
 	while(x == 0){
 
 		printf("Username:\n");
-		char *text = response();
+		text = response();
+        username = text;
+        printf("%s\n", username);
 
-		int length = sizeof(text);
-		length = length + 1;
-		char *us = "a";
-		char usernameMessage[length];
-		strcpy(usernameMessage,us);
-		strcat(usernameMessage,text);
-
+		char *usernameMessage = concat("a",username);
 
 		char *serverResponse = sendMessage(argc,argv, usernameMessage);
 	    printf("%s\n", serverResponse);
+        printf("%s\n", username);
 
 	    if (serverResponse[0] == 's')
 	    {
 	    	x = 1;
+            printf("%s\n", username);
 	    }
 	}
+
 	//CHECK PASSWORD
 	x = 0;
 	while(x == 0){
 
 		printf("Password:\n");
-		char *text = response();
+        printf("%s\n", username);
+		text = response();
 
-		int length = sizeof(text);
-		length = length + 1;
-		//SEQUENCE LETTER
-		char *us = "b";
-		char usernameMessage[length];
-		strcpy(usernameMessage,us);
-		strcat(usernameMessage,text);
+		char *passwordMessage = concat("b",text);
 
-		char *serverResponse = sendMessage(argc,argv, usernameMessage);
-		// char *text = response();
+        passwordMessage = concat(passwordMessage,",");
+        passwordMessage = concat(passwordMessage,username);
 
-		// char *serverResponse = sendMessage(argc, argv, text);
+		char *serverResponse = sendMessage(argc,argv, passwordMessage);
 	    printf("%s\n", serverResponse);
 
 	    if (strncmp(serverResponse,"success",7))
