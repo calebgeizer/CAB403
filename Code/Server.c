@@ -46,20 +46,6 @@ char *Receive_Array_Int_Data(int socket_identifier, int size) {
 	buf[numbytes] = '\0';
 	char *results = buf;
 
-
-/*
-	char *results = malloc(sizeof(char)*size);
-	for (i=0; i < size; i++) {
-		if ((number_of_bytes=recv(socket_identifier, &statistics, sizeof(uint16_t), 0))
-		         == RETURNED_ERROR) {
-			perror("recv");
-			exit(EXIT_FAILURE);			
-		    
-		}
-		results[i] = ntohs(statistics);
-	}
-*/
-
 	return results;
 }
 
@@ -79,11 +65,9 @@ char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 	int x = rand() % size;
 	int y = rand() % size;
 
-	//printf("%d %d\n", x,y);
 
 	char *word1 = hangmanWords[x][0];
 	char *word2 = hangmanWords[y][0];
-	//printf("%s %s\n", word1, word2);
 
 	char* finalText;
 	finalText = malloc(strlen(word1)+1+4); /* make space for the new string (should check the return value ...) */
@@ -91,7 +75,6 @@ char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 	strcat(finalText, " ");
 	strcat(finalText, word2); /* add the extension */
 
-	//printf("%s\n", finalText);
 	return finalText;
 }
 
@@ -117,13 +100,9 @@ int grabFile(char* result[MAXDATASIZE][secondArray],char* filename, char* firstD
 		if (fgets(buf,1000, ptr_file)!=NULL)
 		{
 			data[i]=strndup(buf,30);
-			//printf("%s\n", data[i]);
 			size++;
 		}
 	}
-
-	//printf("%d\n", size);
-
 	for (int i = 0; i < size; ++i)
 	{
 		int length = sizeof(data[i]);
@@ -132,14 +111,12 @@ int grabFile(char* result[MAXDATASIZE][secondArray],char* filename, char* firstD
 		token1=strtok(input,firstDelim);	
 		if(token1){
 			result[i][j]=token1;
-			//printf("%s\n", result[i][j]);
 			j++;
 		}	
 		token1 =strtok(NULL,secondDelim);
 		if (token1)
 		{
 			result[i][j]=token1;
-			//printf("%s\n", result[i][j]);
 			j--;
 		}
 
@@ -168,7 +145,6 @@ int authUser(char* username){
 	int size = 0;
 	int pos = 0;
 	char* success = NULL;
-	printf("%s 4\n", username);
 
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
 
@@ -217,9 +193,6 @@ int authPass(char* password, int pos){
 	
 	int count = 0;
 
-	printf("%s\n", currentPassword);
-	printf("%s \n", password);
-
 	//check character similarity
 	for (int j = 0; j < 6; ++j)
 	{
@@ -259,10 +232,10 @@ char* checkMessage(char* message){
 	char pass[6];
 	char username[8];
 	char *user;
-	printf("%s mes\n", message);
 	label[0] = message[0];
-	printf("%c lab\n", label[0]);
+	printf("Label: %c \n", label[0]);
 
+	//if authentication
 	if (label[0] == 'b')
 	{
 		char *text;
@@ -273,8 +246,6 @@ char* checkMessage(char* message){
 		{
 			username[i] = user[i];
 		}
-		printf("%s\n", username);
-		printf("%s \n", text);
 
 		for (int i = 0; i < 7; ++i)
 		{
@@ -289,114 +260,17 @@ char* checkMessage(char* message){
 
 		}
 
-		printf("%s \n", pass);
-		printf("%s \n", username);
-
 		int userPos = authUser(username);
-
-		printf("%d\n", userPos);
-
 		int passSuc = authPass(pass, userPos);
-		printf("%d\n", passSuc);
 
 		if (passSuc == 1)
 		{
-			return "s";
-		}
-
-		return "f";
-	}
-
-	
-
-
-
-
-	// WRITE CODE HERE
-
-	//char *token1;
-	//char* user;
-
-	//char *theMessage;
-
-	//theMessage = message;
-
-
-	//printf("%c no\n", theMessage[0]);
-
-
-/*
-	if (label[0] == 'a')
-	{
-		//printf("%c 2\n", label[0]);
-		//printf("%s 3\n", text);
-
-		user = authUser(text);
-		printf("%s 3\n", user);
-
-		if (user != NULL)
-		{
-			printf("%s 5\n", user);
 			return "success";
 		}
-		return "0";
-	}*/
 
-	//int length = strlen(text);
-	//char *result[2];
-
-	/*
-	if(label[0] == 'b'){
-		//char* user[2];
-
-
-	}*/
-	//printf("%s mes\n", theMessage);
-	//printf("%s mes\n", message);
-
-
-	//char* str = "15:18:13";
-	//char *a, *b;
-	//sscanf(theMessage, "%s,%s", a, b);
-	//printf("%s %s\n", a, b);
-
-	//printf("%s mes\n", theMessage);
-	//int length = count(theMessage);
-
-
-	//printf("%d mes\n", length);
-	//printf("%s mes\n", label);
-	//printf("%s mes\n", text);
-
-	
-
-
-
-/*
-
-	//int length = sizeof(text);
-	printf("%s 1\n", text);
-	char *input;
-	printf("%s 2\n", text);
-	input = text;
-	printf("%s 3\n", input);
-
-	token1 = strtok(input,",");	
-	if(token1){
-		result[0]=token1;
-		printf("%s\n", result[0]);
-	}	
-	printf("%s 5\n", text);
-	token1 =strtok(NULL,",");	
-	printf("%s tok\n", token1);
-	if (token1)
-	{
-		result[1]=token1;
-		printf("%s 6\n", result[1]);
+		return "fail";
 	}
 
-*/
-	//printf("%s 7\n", text);
 
 	//hangman();
 
@@ -412,11 +286,6 @@ int main(int argc, char *argv[])
 	socklen_t sin_size;
 	char *results;
 
-/*	if (argc < 1)
-	{
-		fprintf(stderr,"usage: server portNumber");
-	}
-*/
 	if (argc <= 1)
 	{
 		port = MYPORT;
@@ -471,6 +340,7 @@ int main(int argc, char *argv[])
 			printf("%s\n", results);
 
 			char* answer = checkMessage(results);
+			printf("%s\n", answer);
 
 			if (send(new_fd, answer, sizeof(answer), 0) == -1)
 				perror("send");
