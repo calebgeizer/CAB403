@@ -85,9 +85,6 @@ char* sendMessage(int argc, char *argv[],char *message){
     struct sockaddr_in their_addr; /* connector's address information*/
 
 
-   // printf("%s\n", hostname);
-
-
     if (argc < 2) {
         fprintf(stderr,"usage: client hostname (or zPAddress) [portNumber]\n");
         exit(1);
@@ -134,6 +131,7 @@ char* sendMessage(int argc, char *argv[],char *message){
     return response;
 }
 
+
 int main(int argc, char *argv[])
 {
     char *text;
@@ -146,18 +144,16 @@ int main(int argc, char *argv[])
 		printf("Username:\n");
 		text = response();
         username = text;
-        printf("%s\n", username);
+        //printf("%s\n", username);
 
 		char *usernameMessage = concat("a",username);
 
 		char *serverResponse = sendMessage(argc,argv, usernameMessage);
 	    printf("%s\n", serverResponse);
-        printf("%s\n", username);
 
-	    if (serverResponse[0] == 's')
+	    if (serverResponse[0] != '0')
 	    {
 	    	x = 1;
-            printf("%s\n", username);
 	    }
 	}
 

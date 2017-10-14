@@ -270,14 +270,14 @@ char* checkMessage(char* message){
 		//printf("%s 3\n", text);
 
 		user = authUser(text);
-		//printf("%s 3\n", text);
-
-		printf("%s\n", user);
+		printf("%s 3\n", user);
 
 		if (user != NULL)
 		{
+			printf("%s 5\n", user);
 			return "success";
 		}
+		return "0";
 	}
 
 	if(label[0] == 'b'){
