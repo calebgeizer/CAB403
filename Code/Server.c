@@ -152,13 +152,13 @@ int grabFile(char* result[MAXDATASIZE][secondArray],char* filename, char* firstD
 int count(char* text){
 	int size = 0;
 		
-		for (int i = 0; i < sizeof(text); ++i)
+	for (int i = 0; i < sizeof(text); ++i)
+	{
+		if (isalpha(text[i]))
 		{
-			if (isalpha(text[i]))
-			{
-				size++;
-			}
+			size++;
 		}
+	}
 	return size;
 }
 
@@ -252,23 +252,62 @@ int hangman(){
 char* checkMessage(char* message){
 	//checks what the message is to give the client a response
 
+
+	char label[3];
+	char pass[6];
+	char username[8];
+	char *user;
+	printf("%s mes\n", message);
+	label[0] = message[0];
+	printf("%c lab\n", label[0]);
+
+
+
+	char *text;
+	text = message + 1;
+	user = message + 7;
+
+	for (int i = 0; i < 8; ++i)
+	{
+		username[i] = user[i];
+	}
+	printf("%s\n", username);
+	printf("%s \n", text);
+
+	for (int i = 0; i < 7; ++i)
+	{
+		if (i < 6)
+		{
+			pass[i] = text[i];
+		}
+		if (i == 6)
+		{
+			pass[i] = '\0';
+		}
+
+	}
+
+	printf("%s \n", pass);
+	printf("%s \n", username);
+
+
+	
+
+
+
+
 	// WRITE CODE HERE
 
-	char *token1;
-	char *label;
-	char *text;
-	char* user;
+	//char *token1;
+	//char* user;
 
-	char *theMessage;
+	//char *theMessage;
 
-	theMessage = message;
+	//theMessage = message;
 
-	printf("%s mes\n", theMessage);
 
-	label = &theMessage[0];
-	printf("%c no\n", theMessage[0]);
+	//printf("%c no\n", theMessage[0]);
 
-	text = theMessage + 1;
 
 /*
 	if (label[0] == 'a')
@@ -286,21 +325,66 @@ char* checkMessage(char* message){
 		}
 		return "0";
 	}*/
-	int length = strlen(text);
 
+	//int length = strlen(text);
+	//char *result[2];
+
+	/*
 	if(label[0] == 'b'){
 		//char* user[2];
 
 
-		printf("%d yes\n", length);
+	}*/
+	//printf("%s mes\n", theMessage);
+	//printf("%s mes\n", message);
 
+
+	//char* str = "15:18:13";
+	//char *a, *b;
+	//sscanf(theMessage, "%s,%s", a, b);
+	//printf("%s %s\n", a, b);
+
+	//printf("%s mes\n", theMessage);
+	//int length = count(theMessage);
+
+
+	//printf("%d mes\n", length);
+	//printf("%s mes\n", label);
+	//printf("%s mes\n", text);
+
+	
+
+
+
+/*
+
+	//int length = sizeof(text);
+	printf("%s 1\n", text);
+	char *input;
+	printf("%s 2\n", text);
+	input = text;
+	printf("%s 3\n", input);
+
+	token1 = strtok(input,",");	
+	if(token1){
+		result[0]=token1;
+		printf("%s\n", result[0]);
+	}	
+	printf("%s 5\n", text);
+	token1 =strtok(NULL,",");	
+	printf("%s tok\n", token1);
+	if (token1)
+	{
+		result[1]=token1;
+		printf("%s 6\n", result[1]);
 	}
 
-	printf("%s\n", text);
+*/
+	//printf("%s 7\n", text);
 
 	//hangman();
 
-	return text;
+	return message;
 }
 
 
