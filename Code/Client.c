@@ -134,49 +134,34 @@ char* sendMessage(int argc, char *argv[],char *message){
 
 int main(int argc, char *argv[])
 {
+    char *text2;
     char *text;
     char *username = "none";
 
-	//CHECK USERNAME
-	int x = 0;
-	while(x == 0){
+    int x = 0;
+    while(x == 0){
+        printf("Username:\n");
+        text2 = response();
+        username = text2;
 
-		printf("Username:\n");
-		text = response();
-        username = text;
-        //printf("%s\n", username);
+        printf("Password:\n");
+        text = response();
 
-		char *usernameMessage = concat("a",username);
-
-		char *serverResponse = sendMessage(argc,argv, usernameMessage);
-	    printf("%s\n", serverResponse);
-
-	    if (serverResponse[0] != '0')
-	    {
-	    	x = 1;
-	    }
-	}
-
-	//CHECK PASSWORD
-	x = 0;
-	while(x == 0){
-
-		printf("Password:\n");
-        printf("%s\n", username);
-		text = response();
-
-		char *passwordMessage = concat("b",text);
+        char *passwordMessage = concat("b",text);
 
         passwordMessage = concat(passwordMessage,",");
         passwordMessage = concat(passwordMessage,username);
+        printf("%s\n", passwordMessage);
 
-		char *serverResponse = sendMessage(argc,argv, passwordMessage);
-	    printf("%s\n", serverResponse);
+        char *serverResponse = sendMessage(argc,argv, passwordMessage);
+        printf("%s\n", serverResponse);
 
-	    if (strncmp(serverResponse,"success",7))
-	    {
-	    	x = 1;
-	    }
-	}
+        if (strncmp(serverResponse,"success",7))
+        {
+            x = 1;
+        }
+    }
+
+
     return 0;
 }

@@ -259,11 +259,18 @@ char* checkMessage(char* message){
 	char *text;
 	char* user;
 
-	label = &message[0];
+	char *theMessage;
 
-	text = message + 1;
+	theMessage = message;
 
+	printf("%s mes\n", theMessage);
 
+	label = &theMessage[0];
+	printf("%c no\n", theMessage[0]);
+
+	text = theMessage + 1;
+
+/*
 	if (label[0] == 'a')
 	{
 		//printf("%c 2\n", label[0]);
@@ -278,10 +285,15 @@ char* checkMessage(char* message){
 			return "success";
 		}
 		return "0";
-	}
+	}*/
+	int length = strlen(text);
 
 	if(label[0] == 'b'){
-		char* pass;
+		//char* user[2];
+
+
+		printf("%d yes\n", length);
+
 	}
 
 	printf("%s\n", text);
