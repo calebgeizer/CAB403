@@ -263,41 +263,51 @@ char* checkMessage(char* message){
 	label[0] = message[0];
 	printf("%c lab\n", label[0]);
 
-
-
-	char *text;
-	text = message + 1;
-	user = message + 7;
-
-	for (int i = 0; i < 8; ++i)
+	if (label[0] == 'b')
 	{
-		username[i] = user[i];
-	}
-	printf("%s\n", username);
-	printf("%s \n", text);
+		char *text;
+		text = message + 1;
+		user = message + 7;
 
-	for (int i = 0; i < 7; ++i)
-	{
-		if (i < 6)
+		for (int i = 0; i < 8; ++i)
 		{
-			pass[i] = text[i];
+			username[i] = user[i];
 		}
-		if (i == 6)
+		printf("%s\n", username);
+		printf("%s \n", text);
+
+		for (int i = 0; i < 7; ++i)
 		{
-			pass[i] = '\0';
+			if (i < 6)
+			{
+				pass[i] = text[i];
+			}
+			if (i == 6)
+			{
+				pass[i] = '\0';
+			}
+
 		}
 
+		printf("%s \n", pass);
+		printf("%s \n", username);
+
+		int userPos = authUser(username);
+
+		printf("%d\n", userPos);
+
+		int passSuc = authPass(pass, userPos);
+		printf("%d\n", passSuc);
+
+		if (passSuc == 1)
+		{
+			return "s";
+		}
+
+		return "f";
 	}
 
-	printf("%s \n", pass);
-	printf("%s \n", username);
-
-	int userPos = authUser(username);
-
-	printf("%d\n", userPos);
-
-	int passSuc = authPass(pass, userPos);
-	printf("%d\n", passSuc);
+	
 
 
 

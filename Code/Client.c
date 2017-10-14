@@ -150,13 +150,13 @@ int main(int argc, char *argv[])
         char *passwordMessage = concat("b",text);
 
         passwordMessage = concat(passwordMessage,username);
-        printf("%s\n", passwordMessage);
-        printf("%lu\n", strlen(passwordMessage));
+        //printf("%s\n", passwordMessage);
+        //printf("%lu\n", strlen(passwordMessage));
 
         char *serverResponse = sendMessage(argc,argv, passwordMessage);
         printf("%s\n", serverResponse);
 
-        if (strncmp(serverResponse,"success",7))
+        if (serverResponse[0] == 's')
         {
             x = 1;
         }
