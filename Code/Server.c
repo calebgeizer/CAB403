@@ -258,6 +258,7 @@ char* checkMessage(char* message){
 	char *token1;
 	char *label;
 	char *text;
+	char* user;
 
 	label = &message[0];
 
@@ -268,7 +269,6 @@ char* checkMessage(char* message){
 	{
 		//printf("%c 2\n", label[0]);
 		//printf("%s 3\n", text);
-		char* user;
 
 		user = authUser(text);
 		//printf("%s 3\n", text);
@@ -280,6 +280,11 @@ char* checkMessage(char* message){
 			return "success";
 		}
 	}
+
+	if(label[0] == 'b'){
+		char* pass;
+	}
+
 	printf("%s\n", text);
 
 	//hangman();

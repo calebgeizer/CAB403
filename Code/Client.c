@@ -128,32 +128,29 @@ char* sendMessage(int argc, char *argv[],char *message){
 
 int main(int argc, char *argv[])
 {
-	char *username;
-	char *password;
 
 	//CHECK USERNAME
 	int x = 0;
 	while(x == 0){
 
 		printf("Username:\n");
-		username = response();
+		char *text = response();
 
-		int length = sizeof(username);
+		int length = sizeof(text);
 		length = length + 1;
 		char *us = "a";
 		char usernameMessage[length];
 		strcpy(usernameMessage,us);
-		strcat(usernameMessage,username);
+		strcat(usernameMessage,text);
 
 		char *serverResponse = sendMessage(argc,argv, usernameMessage);
 	    printf("%s\n", serverResponse);
 
-	    if (strcmp(serverResponse,"s") == 0)
+	    if (serverResponse[0] == 's')
 	    {
 	    	x = 1;
 	    }
 	}
-
 	//CHECK PASSWORD
 	x = 0;
 	while(x == 0){
@@ -175,7 +172,7 @@ int main(int argc, char *argv[])
 		// char *serverResponse = sendMessage(argc, argv, text);
 	    printf("%s\n", serverResponse);
 
-	    if (strcmp(serverResponse,"s") == 0)
+	    if (strncmp(serverResponse,"success",7))
 	    {
 	    	x = 1;
 	    }
