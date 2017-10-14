@@ -164,10 +164,10 @@ int count(char* text){
 	return size;
 }
 
-char* authUser(char* username){
+int authUser(char* username){
 	char* authentication[MAXDATASIZE][secondArray];
 	int size = 0;
-	char* success = NULL;
+	int success = 0;
 	printf("%s 4\n", username);
 
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
@@ -192,11 +192,11 @@ char* authUser(char* username){
 
 		if (count == userCount && userCount == currentCount)
 		{
-			success = username;
+			success = 1;
 		}
 	}
 
-	return success;		
+	return success;
 }
 
 
@@ -216,6 +216,9 @@ int authPass(char* password, char* username){
 		int passCount = count(password);
 		int currentCount = count(currentPassword);
 
+		printf("%d passCount\n", passCount);
+		printf("%d currentCount\n", currentCount);
+
 		int charSim = 0;
 		
 		//check character similarity
@@ -225,6 +228,11 @@ int authPass(char* password, char* username){
 				charSim++;
 			}
 		}
+
+
+		printf("%d passCount\n", passCount);
+		printf("%d currentCount\n", currentCount);
+		printf("%d charSim\n", charSim);
 
 		if (charSim == passCount && passCount == currentCount)
 		{
@@ -258,7 +266,6 @@ char* checkMessage(char* message){
 	char *token1;
 	char *label;
 	char *text;
-	char* user;
 
 	label = &message[0];
 
@@ -270,12 +277,12 @@ char* checkMessage(char* message){
 		//printf("%c 2\n", label[0]);
 		//printf("%s 3\n", text);
 
-		user = authUser(text);
+		int user = authUser(text);
 		//printf("%s 3\n", text);
 
-		printf("%s\n", user);
+		//printf("%d 1\n", user);
 
-		if (user != NULL)
+		if (user == 1)
 		{
 			return "success";
 		}
@@ -360,8 +367,12 @@ int main(int argc, char *argv[])
 			//printf("%s\n", results);
 
 			char* answer = checkMessage(results);
+			//printf("%s\n", answer);
 
-			if (send(new_fd, answer, sizeof(answer), 0) == -1)
+		    int length = strlen(answer);
+		    printf("%d\n", length);
+
+			if (send(new_fd, answer, length, 0) == -1)
 				perror("send");
 
 			close(new_fd);

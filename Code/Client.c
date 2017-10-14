@@ -11,7 +11,7 @@
 
 #define PORT 12345    /* the port client will be connecting to */
 
-#define MAXDATASIZE 100 /* max number of bytes we can get at once */
+#define MAXDATASIZE 300 /* max number of bytes we can get at once */
 
 void quit() /* write error message and quit */
 {
@@ -28,9 +28,9 @@ void Send_Array_Data(int socket_id, char *myArray) {
         //send(socket_id, &statistics, sizeof(uint16_t), 0);
     }*/
 
+    int length = strlen(myArray);
 
-
-    send(socket_id, myArray, sizeof(myArray), 0);
+    send(socket_id, myArray, length, 0);
 }
 
 // asks the user to respond
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 		strcpy(usernameMessage,us);
 		strcat(usernameMessage,text);
 
-		char *serverResponse = sendMessage(argc,argv, usernameMessage);
+		char *serverResponse = sendMessage(argc, argv, usernameMessage);
 	    printf("%s\n", serverResponse);
 
 	    if (serverResponse[0] == 's')
