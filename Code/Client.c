@@ -28,9 +28,9 @@ void Send_Array_Data(int socket_id, char *myArray) {
         //send(socket_id, &statistics, sizeof(uint16_t), 0);
     }*/
 
+    int length = strlen(myArray);
 
-
-    send(socket_id, myArray, sizeof(myArray), 0);
+    send(socket_id, myArray, length, 0);
 }
 
 // asks the user to respond
