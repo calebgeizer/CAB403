@@ -138,13 +138,16 @@ int main(int argc, char *argv[])
     char *text;
     char *username = "none";
 
+    printf("===========================================\n\n\nWelcome to the Online Hnagman Gaming System\n\n\n===========================================");
+
     int x = 0;
     while(x == 0){
-        printf("Username:\n");
+        printf("\n\n\nYou are required to logon with your registered Username and Password\n\n");
+        printf("Please enter your username -->");
         text2 = response();
         username = text2;
 
-        printf("Password:\n");
+        printf("Please enter your password -->");
         text = response();
 
         char *passwordMessage = concat("b",text);
@@ -152,12 +155,42 @@ int main(int argc, char *argv[])
         passwordMessage = concat(passwordMessage,username);
 
         char *serverResponse = sendMessage(argc,argv, passwordMessage);
-        printf("%s\n", serverResponse);
+        //printf("%s\n", serverResponse);
 
         if (serverResponse[0] == 's')
         {
             x = 1;
+        }else{
+            printf("\n\n\nYou entered either an incorrect username or password\n");
         }
+    }
+
+    char *choice = "0";
+    x = 0;
+    while(x == 0){
+        printf("\n\n\n\nWelcome to the Hangman Gaming System\n\n\n\n");
+        printf("\nPlease enter a selection\n<1> Play Hangman\n<2> Show Leaderboard\n<3> Quit\n\nSelection option 1-3 ->" );
+        choice = response();
+
+        if ((strcmp(choice,"1") == 0)||(strcmp(choice,"2") == 0)||(strcmp(choice,"3") == 0))
+        {
+            x = 1;
+        }
+    }
+
+
+    if((strcmp(choice,"1") == 0)){
+        //Play Hangman
+    }
+
+
+    if((strcmp(choice,"2") == 0)){
+        //Show Leaderboard
+    }
+
+
+    if((strcmp(choice,"3") == 0)){
+        //Quit
     }
 
 
