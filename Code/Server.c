@@ -24,6 +24,27 @@
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
 
+char* checkMessage(char* message){
+	//checks what the message is to give the client a response
+
+	// WRITE CODE HERE
+	int user = 0;
+	user = authUser(message);
+
+	printf("%d\n", user);
+
+	if (user == 1)
+	{
+		return "success";
+	}
+	if (user == 0)
+	{
+		return "failed";
+	}
+	hangman();
+
+	return message;
+}
 
 
 
@@ -175,6 +196,7 @@ int authUser(char* username){
 	for (int i = 0; i < size; ++i)
 	{
 		char *currentUsername = authentication[i][0];
+<<<<<<< HEAD
 		
 		//get length of compared words
 		int userCount = count(username);
@@ -191,6 +213,9 @@ int authUser(char* username){
 		}
 
 		if (count == userCount && userCount == currentCount)
+=======
+		if (*currentUsername == *username)
+>>>>>>> parent of 0ded370... Authentication for username works
 		{
 			success = 1;
 		}
@@ -258,6 +283,7 @@ int hangman(){
 	return 0;
 }
 
+<<<<<<< HEAD
 char* checkMessage(char* message){
 	//checks what the message is to give the client a response
 
@@ -299,6 +325,8 @@ char* checkMessage(char* message){
 	return text;
 }
 
+=======
+>>>>>>> parent of 0ded370... Authentication for username works
 
 int main(int argc, char *argv[])
 {
@@ -364,7 +392,7 @@ int main(int argc, char *argv[])
 		if (!fork()) { /* this is the child process */
 
 			results = Receive_Array_Int_Data(new_fd,  ARRAY_SIZE);
-			//printf("%s\n", results);
+			printf("%s\n", results);
 
 			char* answer = checkMessage(results);
 			//printf("%s\n", answer);

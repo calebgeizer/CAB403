@@ -143,6 +143,7 @@ int main(int argc, char *argv[])
 		strcpy(usernameMessage,us);
 		strcat(usernameMessage,text);
 
+<<<<<<< HEAD
 		char *serverResponse = sendMessage(argc, argv, usernameMessage);
 	    printf("%s\n", serverResponse);
 
@@ -176,6 +177,14 @@ int main(int argc, char *argv[])
 	    {
 	    	x = 1;
 	    }
+=======
+	//Temp message loop
+	while(x == 0){
+		char *text = response();
+
+	    char *serverResponse = sendMessage(argc, argv, text);
+	    printf("%s\n", serverResponse);
+>>>>>>> parent of 0ded370... Authentication for username works
 	}
 
     return 0;
