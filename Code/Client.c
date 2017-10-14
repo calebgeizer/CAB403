@@ -132,14 +132,83 @@ char* sendMessage(int argc, char *argv[],char *message){
 }
 
 
+char* menu(){
+    char *choice = "0";
+    int x = 0;
+    while(x == 0){
+        printf("\n\n\n\nWelcome to the Hangman Gaming System\n\n\n\n");
+        printf("\nPlease enter a selection\n<1> Play Hangman\n<2> Show Leaderboard\n<3> Quit\n\nSelection option 1-3 ->" );
+        choice = response();
+        return choice;
+        if ((strcmp(choice,"1") == 0)||(strcmp(choice,"2") == 0)||(strcmp(choice,"3") == 0))
+        {
+            x = 1;
+        }
+    }
+    return choice;
+}
+
+void Hangman(char* username){
+    printf("%s yes\n", username);
+    int x = 0;
+    char *choice = "0";
+    while(x == 0){
+        printf("\n\nGuessed letters:\n\nNumber of gusses left:");
+        //get the number of guesses
+        printf("\n\nWord:\n");
+        //get the word
+        printf("\n\nEnter your guess - ");
+        choice = response();
+
+        printf("\n\n-------------------------------------------\n");
+
+        //TEMP QUIT
+        if((strcmp(choice,"Q") == 0)){
+            x = 1;
+        }
+    }
+
+    printf("\n\nGame Over\n");
+    printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
+}
+
+void runGame(char* name){
+    printf("%s yes\n", name);
+
+    int x = 0;
+    while(x == 0){
+        char *choice = menu();
+
+        if((strcmp(choice,"1") == 0)){
+            //Play Hangman
+            Hangman(name);
+        }
+
+        if((strcmp(choice,"2") == 0)){
+            //Show Leaderboard
+        }
+
+        if((strcmp(choice,"3") == 0)){
+            //Quit
+            return;
+        }
+    }
+    
+
+}
+
+
+
 int main(int argc, char *argv[])
 {
     char *text2;
     char *text;
-    char *username = "none";
+    char* username = "none";
 
-    printf("===========================================\n\n\nWelcome to the Online Hnagman Gaming System\n\n\n===========================================");
 
+    printf("===========================================\n\n\nWelcome to the Online Hangman Gaming System\n\n\n===========================================");
+    
+    //logon
     int x = 0;
     while(x == 0){
         printf("\n\n\nYou are required to logon with your registered Username and Password\n\n");
@@ -165,34 +234,9 @@ int main(int argc, char *argv[])
         }
     }
 
-    char *choice = "0";
-    x = 0;
-    while(x == 0){
-        printf("\n\n\n\nWelcome to the Hangman Gaming System\n\n\n\n");
-        printf("\nPlease enter a selection\n<1> Play Hangman\n<2> Show Leaderboard\n<3> Quit\n\nSelection option 1-3 ->" );
-        choice = response();
-
-        if ((strcmp(choice,"1") == 0)||(strcmp(choice,"2") == 0)||(strcmp(choice,"3") == 0))
-        {
-            x = 1;
-        }
-    }
-
-
-    if((strcmp(choice,"1") == 0)){
-        //Play Hangman
-    }
-
-
-    if((strcmp(choice,"2") == 0)){
-        //Show Leaderboard
-    }
-
-
-    if((strcmp(choice,"3") == 0)){
-        //Quit
-    }
-
+    char* name = username;
+    printf("%s yes\n", name);
+    runGame(name);
 
     return 0;
 }
