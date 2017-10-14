@@ -16,6 +16,7 @@
 #include <unistd.h>
 
 
+
 	#define MAXDATASIZE 500
 	#define secondArray 2
 
@@ -162,9 +163,10 @@ int count(char* text){
 	return size;
 }
 
-char* authUser(char* username){
+int authUser(char* username){
 	char* authentication[MAXDATASIZE][secondArray];
 	int size = 0;
+	int pos = 0;
 	char* success = NULL;
 	printf("%s 4\n", username);
 
@@ -188,48 +190,48 @@ char* authUser(char* username){
 			}
 		}
 
+
 		if (count == userCount && userCount == currentCount)
 		{
 			success = username;
+			pos = i;
 		}
 	}
 
-	return success;		
+	return pos;		
 }
 
 
-int authPass(char* password, char* username){
+int authPass(char* password, int pos){
 	char* authentication[MAXDATASIZE][secondArray];
 	int size = 0;
 	int success = 0;
-	printf("%s 4\n", password);
+	char finalPass[6];
 
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
 
-	for (int i = 0; i < size; ++i)
+	char *currentPassword = authentication[pos][1];
+
+	while (isspace(*currentPassword))
+		++currentPassword;
+	
+	int count = 0;
+
+	printf("%s\n", currentPassword);
+	printf("%s \n", password);
+
+	//check character similarity
+	for (int j = 0; j < 6; ++j)
 	{
-		char *currentPassword = authentication[i][0];
-		
-		//get length of compared words
-		int passCount = count(password);
-		int currentCount = count(currentPassword);
-
-		int charSim = 0;
-		
-		//check character similarity
-		for (int j = 0; j < passCount; ++j)
-		{
-			if(currentPassword[j] == password[j]){
-				charSim++;
-			}
-		}
-
-		if (charSim == passCount && passCount == currentCount)
-		{
-			success = 1;
+		if(currentPassword[j] == password[j]){
+			count++;
 		}
 	}
 
+	if (count == 6)
+	{
+		success = 1;
+	}
 	return success;			
 }
 
@@ -290,8 +292,12 @@ char* checkMessage(char* message){
 	printf("%s \n", pass);
 	printf("%s \n", username);
 
+	int userPos = authUser(username);
 
-	
+	printf("%d\n", userPos);
+
+	int passSuc = authPass(pass, userPos);
+	printf("%d\n", passSuc);
 
 
 
