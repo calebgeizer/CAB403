@@ -4,6 +4,7 @@
 */
 
 #include <arpa/inet.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -150,19 +151,48 @@ int grabFile(char* result[MAXDATASIZE][secondArray],char* filename, char* firstD
 	return size;
 }
 
-int authUser(char* username){
+int count(char* text){
+	int size = 0;
+		
+		for (int i = 0; i < sizeof(text); ++i)
+		{
+			if (isalpha(text[i]))
+			{
+				size++;
+			}
+		}
+	return size;
+}
+
+char* authUser(char* username){
 	char* authentication[MAXDATASIZE][secondArray];
 	int size = 0;
-	int success = 0;
+	char* success = NULL;
+	printf("%s 4\n", username);
 
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
 
 	for (int i = 0; i < size; ++i)
 	{
 		char *currentUsername = authentication[i][0];
-		if (strncmp(currentUsername,username,7))
+		
+		//get length of compared words
+		int userCount = count(username);
+		int currentCount = count(currentUsername);
+
+		int count = 0;
+		
+		//check character similarity
+		for (int j = 0; j < userCount; ++j)
 		{
-			success = 1;
+			if(currentUsername[j] == username[j]){
+				count++;
+			}
+		}
+
+		if (count == userCount && userCount == currentCount)
+		{
+			success = username;
 		}
 	}
 
@@ -170,22 +200,39 @@ int authUser(char* username){
 }
 
 
-int authPass(char* password){
+int authPass(char* password, char* username){
 	char* authentication[MAXDATASIZE][secondArray];
 	int size = 0;
 	int success = 0;
+	printf("%s 4\n", password);
 
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
 
 	for (int i = 0; i < size; ++i)
 	{
-		if (authentication[i][1] == password)
+		char *currentPassword = authentication[i][0];
+		
+		//get length of compared words
+		int passCount = count(password);
+		int currentCount = count(currentPassword);
+
+		int charSim = 0;
+		
+		//check character similarity
+		for (int j = 0; j < passCount; ++j)
+		{
+			if(currentPassword[j] == password[j]){
+				charSim++;
+			}
+		}
+
+		if (charSim == passCount && passCount == currentCount)
 		{
 			success = 1;
 		}
 	}
 
-	return success;		
+	return success;			
 }
 
 int hangman(){
@@ -217,21 +264,23 @@ char* checkMessage(char* message){
 	text = message + 1;
 
 
-	printf("%s\n", text);
-
-
-	if (strncmp(label,"a",1))
+	if (label[0] == 'a')
 	{
-		int user = 0;
+		//printf("%c 2\n", label[0]);
+		//printf("%s 3\n", text);
+		char* user;
+
 		user = authUser(text);
+		//printf("%s 3\n", text);
 
-		printf("%d\n", user);
+		printf("%s\n", user);
 
-		if (user == 1)
+		if (user != NULL)
 		{
 			return "success";
 		}
 	}
+	printf("%s\n", text);
 
 	//hangman();
 

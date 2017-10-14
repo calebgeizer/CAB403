@@ -128,20 +128,43 @@ char* sendMessage(int argc, char *argv[],char *message){
 
 int main(int argc, char *argv[])
 {
+	char *username;
+	char *password;
+
+	//CHECK USERNAME
 	int x = 0;
-
-	// WRITE CODE HERE
-
-
-	//Temp message loop
 	while(x == 0){
 
-	printf("Username:\n");
+		printf("Username:\n");
+		username = response();
+
+		int length = sizeof(username);
+		length = length + 1;
+		char *us = "a";
+		char usernameMessage[length];
+		strcpy(usernameMessage,us);
+		strcat(usernameMessage,username);
+
+		char *serverResponse = sendMessage(argc,argv, usernameMessage);
+	    printf("%s\n", serverResponse);
+
+	    if (strcmp(serverResponse,"s") == 0)
+	    {
+	    	x = 1;
+	    }
+	}
+
+	//CHECK PASSWORD
+	x = 0;
+	while(x == 0){
+
+		printf("Password:\n");
 		char *text = response();
 
 		int length = sizeof(text);
 		length = length + 1;
-		char *us = "a";
+		//SEQUENCE LETTER
+		char *us = "b";
 		char usernameMessage[length];
 		strcpy(usernameMessage,us);
 		strcat(usernameMessage,text);
@@ -149,8 +172,13 @@ int main(int argc, char *argv[])
 		char *serverResponse = sendMessage(argc,argv, usernameMessage);
 		// char *text = response();
 
-	 //    char *serverResponse = sendMessage(argc, argv, text);
-	     printf("%s\n", serverResponse);
+		// char *serverResponse = sendMessage(argc, argv, text);
+	    printf("%s\n", serverResponse);
+
+	    if (strcmp(serverResponse,"s") == 0)
+	    {
+	    	x = 1;
+	    }
 	}
 
     return 0;
