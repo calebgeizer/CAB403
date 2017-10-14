@@ -24,29 +24,6 @@
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
 
-char* checkMessage(char* message){
-	//checks what the message is to give the client a response
-
-	// WRITE CODE HERE
-	int user = 0;
-	user = authUser(message);
-
-	printf("%d\n", user);
-
-	if (user == 1)
-	{
-		return "success";
-	}
-	if (user == 0)
-	{
-		return "failed";
-	}
-	hangman();
-
-	return message;
-}
-
-
 
 
 char *Receive_Array_Int_Data(int socket_identifier, int size) {
@@ -185,10 +162,10 @@ int count(char* text){
 	return size;
 }
 
-int authUser(char* username){
+char* authUser(char* username){
 	char* authentication[MAXDATASIZE][secondArray];
 	int size = 0;
-	int success = 0;
+	char* success = NULL;
 	printf("%s 4\n", username);
 
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
@@ -196,7 +173,6 @@ int authUser(char* username){
 	for (int i = 0; i < size; ++i)
 	{
 		char *currentUsername = authentication[i][0];
-<<<<<<< HEAD
 		
 		//get length of compared words
 		int userCount = count(username);
@@ -213,15 +189,12 @@ int authUser(char* username){
 		}
 
 		if (count == userCount && userCount == currentCount)
-=======
-		if (*currentUsername == *username)
->>>>>>> parent of 0ded370... Authentication for username works
 		{
-			success = 1;
+			success = username;
 		}
 	}
 
-	return success;
+	return success;		
 }
 
 
@@ -241,9 +214,6 @@ int authPass(char* password, char* username){
 		int passCount = count(password);
 		int currentCount = count(currentPassword);
 
-		printf("%d passCount\n", passCount);
-		printf("%d currentCount\n", currentCount);
-
 		int charSim = 0;
 		
 		//check character similarity
@@ -253,11 +223,6 @@ int authPass(char* password, char* username){
 				charSim++;
 			}
 		}
-
-
-		printf("%d passCount\n", passCount);
-		printf("%d currentCount\n", currentCount);
-		printf("%d charSim\n", charSim);
 
 		if (charSim == passCount && passCount == currentCount)
 		{
@@ -283,7 +248,7 @@ int hangman(){
 	return 0;
 }
 
-<<<<<<< HEAD
+
 char* checkMessage(char* message){
 	//checks what the message is to give the client a response
 
@@ -292,6 +257,7 @@ char* checkMessage(char* message){
 	char *token1;
 	char *label;
 	char *text;
+	char* user;
 
 	label = &message[0];
 
@@ -303,12 +269,12 @@ char* checkMessage(char* message){
 		//printf("%c 2\n", label[0]);
 		//printf("%s 3\n", text);
 
-		int user = authUser(text);
+		user = authUser(text);
 		//printf("%s 3\n", text);
 
-		//printf("%d 1\n", user);
+		printf("%s\n", user);
 
-		if (user == 1)
+		if (user != NULL)
 		{
 			return "success";
 		}
@@ -325,8 +291,6 @@ char* checkMessage(char* message){
 	return text;
 }
 
-=======
->>>>>>> parent of 0ded370... Authentication for username works
 
 int main(int argc, char *argv[])
 {
@@ -395,12 +359,8 @@ int main(int argc, char *argv[])
 			printf("%s\n", results);
 
 			char* answer = checkMessage(results);
-			//printf("%s\n", answer);
 
-		    int length = strlen(answer);
-		    printf("%d\n", length);
-
-			if (send(new_fd, answer, length, 0) == -1)
+			if (send(new_fd, answer, sizeof(answer), 0) == -1)
 				perror("send");
 
 			close(new_fd);
