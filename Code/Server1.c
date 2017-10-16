@@ -27,7 +27,28 @@
 
 
 
-char *Receive_Array_Int_Data(int socket_identifier, int size) {
+char *Receive_Data(int socket_identifier, int size) {
+    int number_of_bytes, i=0;
+    uint16_t statistics;
+
+    
+    int sockfd, numbytes, port;
+	char buf[MAXDATASIZE];
+	struct hostent *he;
+	struct sockaddr_in their_addr; /* connector's address information*/
+	//
+
+	if ((numbytes=recv(socket_identifier, buf, MAXDATASIZE, 0)) == -1) {
+		perror("recv");
+		exit(1);
+	}
+
+	buf[numbytes] = '\0';
+	char *results = buf;
+
+	return results;
+}
+char *Receive_Menu(int socket_identifier, int size) {
     int number_of_bytes, i=0;
     uint16_t statistics;
 
@@ -57,9 +78,9 @@ char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 	long ltime;
 
 	/* get the current calendar time */
-	ltime = time(NULL);
-	stime = (unsigned) ltime/2;
-	srand(stime);
+	//ltime = time(NULL);
+	//stime = (unsigned) ltime/2;
+	//srand(stime);
 
 	//select random word
 	int x = rand() % size;
@@ -103,7 +124,7 @@ int grabFile(char* result[MAXDATASIZE][secondArray],char* filename, char* firstD
 			size++;
 		}
 	}
-	for (int i = 0; i < size; ++i)
+	for (int i = 1; i < size; ++i)
 	{
 		int length = sizeof(data[i]);
 		char *input;
@@ -148,7 +169,7 @@ int authUser(char* username){
 
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
 
-	for (int i = 0; i < size; ++i)
+	for (int i = 1; i < size; ++i)
 	{
 		char *currentUsername = authentication[i][0];
 		
@@ -208,7 +229,7 @@ int authPass(char* password, int pos){
 	return success;			
 }
 
-int hangman(){
+char* hangman(){
 	char* hangman[MAXDATASIZE][secondArray];
 
 	int size = 0;
@@ -220,9 +241,24 @@ int hangman(){
 
 	printf("%s\n", finalText);
 
-	return 0;
+	return finalText;
 }
+char* checkMenu(char* menu){
+	char *result;
+	if(menu =="1"){
+		printf("Play Hangman\n");
+		result = hangman();
+		
+	}
+	if(menu =="2"){
+		printf("Show Leaderboard\n");
+	}
+	if(menu =="3"){
+		printf("Quit\n");
+	}
 
+	return result;
+}
 
 char* checkMessage(char* message){
 	//checks what the message is to give the client a response
@@ -233,7 +269,7 @@ char* checkMessage(char* message){
 	char username[8];
 	char *user;
 	label[0] = message[0];
-	printf("Label: %c \n", label[0]);
+	
 
 	//if authentication
 	if (label[0] == 'b')
@@ -266,6 +302,7 @@ char* checkMessage(char* message){
 		if (passSuc == 1)
 		{
 			return "success";
+			
 		}
 
 		return "fail";
@@ -280,11 +317,12 @@ char* checkMessage(char* message){
 
 int main(int argc, char *argv[])
 {
-		int sockfd, new_fd,port;  /* listen on sock_fd, new connection on new_fd */
+	int sockfd, new_fd,port;  /* listen on sock_fd, new connection on new_fd */
 	struct sockaddr_in my_addr;    /* my address information */
 	struct sockaddr_in their_addr; /* connector's address information */
 	socklen_t sin_size;
 	char *results;
+	char *menu;
 
 	if (argc <= 1)
 	{
@@ -336,7 +374,7 @@ int main(int argc, char *argv[])
 			inet_ntoa(their_addr.sin_addr));
 		if (!fork()) { /* this is the child process */
 
-			results = Receive_Array_Int_Data(new_fd,  ARRAY_SIZE);
+			results = Receive_Data(new_fd,  ARRAY_SIZE);
 			printf("%s\n", results);
 
 			char* answer = checkMessage(results);
@@ -344,10 +382,19 @@ int main(int argc, char *argv[])
 
 			if (send(new_fd, answer, sizeof(answer), 0) == -1)
 				perror("send");
-
+			close(new_fd);
+			
+			
+			exit(0);
+			menu = Receive_Menu(new_fd,  ARRAY_SIZE);
+			char* menu_anwser = checkMenu(menu);
+			
+			if (send(new_fd, menu_anwser, sizeof(menu_anwser), 0) == -1)
+				perror("send");
 			close(new_fd);
 			exit(0);
 		}
+		
 		close(new_fd);  /* parent doesn't need this */
 
 		while(waitpid(-1,NULL,WNOHANG) > 0); /* clean up child processes */
