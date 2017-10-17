@@ -183,6 +183,7 @@ int main(int argc, char *argv[])
 	exit(1);
 	}
 
+
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 	perror("socket");
 	exit(1);
@@ -204,7 +205,9 @@ int main(int argc, char *argv[])
 	printf("===========================================\n\n\nWelcome to the Online Hangman Gaming System\n\n\n===========================================");
 	//logon
 	
+	
 	while(x == 0){
+
 		printf("\n\n\nYou are required to logon with your registered Username and Password\n\n");
 		printf("Please enter your username -->");
 		fgets(text2, 100, stdin);
@@ -222,7 +225,7 @@ int main(int argc, char *argv[])
 		if ((numbytes=recv(sockfd, buf, MAXDATASIZE, 0)) == -1) {
         	perror("recv");
         	exit(1);
-    		}
+    	}
 		
 		char *serverResponse = buf;
 		printf("%s\n", serverResponse);
@@ -234,7 +237,26 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	char* name = username;
-	runGame(sockfd,name);
+
+
+	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+	perror("socket");
+	exit(1);
+	}
+
+	if (connect(sockfd, (struct sockaddr *)&their_addr, \
+	sizeof(struct sockaddr)) == -1) {
+	perror("connect");
+	exit(1);
+	
+	}
+
+	Send_Data(sockfd, "1");
+		
+
+
+	//char* name = username;
+	//runGame(sockfd,name);
+
 	return 0;
 }

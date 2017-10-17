@@ -246,15 +246,15 @@ char* hangman(){
 
 char* checkMenu(char* menu){
 	char *result;
-	if(menu =="1"){
+	if(menu[0] == '1'){
 		printf("Play Hangman\n");
-		result = hangman();
-		
+		//result = hangman();
+		result = "hangman";
 	}
-	if(menu =="2"){
+	if(menu[0] == '2'){
 		printf("Show Leaderboard\n");
 	}
-	if(menu =="3"){
+	if(menu[0] == '3'){
 		printf("Quit\n");
 	}
 
@@ -308,8 +308,6 @@ char* checkMessage(char* message){
 
 		return "fail";
 	}
-
-
 	
 
 	return message;
@@ -378,21 +376,25 @@ int main(int argc, char *argv[])
 			results = Receive_Data(new_fd,  ARRAY_SIZE);
 			printf("%s\n", results);
 
-			char* answer = checkMessage(results);
-			printf("%s\n", answer);
+			char* answer;
+
+
+			if (results[0] == 'b')
+			{
+				answer = checkMessage(results);
+			}else{
+				char* menu_answer = checkMenu(results);
+
+			}
+
+
+
 
 			if (send(new_fd, answer, sizeof(answer), 0) == -1)
 				perror("send");
 			close(new_fd);
 			
 			
-			exit(0);
-			menu = Receive_Menu(new_fd,  ARRAY_SIZE);
-			char* menu_anwser = checkMenu(menu);
-			
-			if (send(new_fd, menu_anwser, sizeof(menu_anwser), 0) == -1)
-				perror("send");
-			close(new_fd);
 			exit(0);
 		}
 		
