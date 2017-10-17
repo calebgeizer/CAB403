@@ -382,13 +382,11 @@ int main(int argc, char *argv[])
 			if (results[0] == 'b')
 			{
 				answer = checkMessage(results);
+				printf("%s\n", answer);
 			}else{
 				char* menu_answer = checkMenu(results);
 
 			}
-
-
-
 
 			if (send(new_fd, answer, sizeof(answer), 0) == -1)
 				perror("send");
