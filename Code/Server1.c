@@ -243,6 +243,7 @@ char* hangman(){
 
 	return finalText;
 }
+
 char* checkMenu(char* menu){
 	char *result;
 	if(menu =="1"){
@@ -309,7 +310,7 @@ char* checkMessage(char* message){
 	}
 
 
-	//hangman();
+	
 
 	return message;
 }

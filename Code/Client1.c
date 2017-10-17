@@ -125,22 +125,21 @@ char* runGame(int socket_id,char* name){
 		printf("\nPlease enter a selection\n<1> Play Hangman\n<2> Show Leaderboard\n<3> Quit\n\nSelection option 1-3 -> " );
 		fgets(choice, 10, stdin);
 		choice[strlen(choice) - 1] = '\0';
-		printf("\n%s\n",choice);
-		if(choice[0] ==1){
+		printf("\n%c\n",choice[0]);
+		if(choice[0] == '1'){
 		    //Play Hangman
+			printf("\n%c\n",choice[0]);
 			Hangman(name);
 			Send_Data(socket_id, choice);
 			x =1;
 		}
-
-		else if(choice[0] ==2){
+		else if(choice[0] == '2'){
 		    //Show Leaderboard
 			printf("LEADERBOARD\n");
 			Send_Data(socket_id, choice);
 			x =1;
 		}
-
-		else if(choice[0] ==3){
+		else if(choice[0] == '3'){
 		    //Quit
 			printf("QUIT\n");
 			Send_Data(socket_id, choice);
