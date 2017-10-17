@@ -121,6 +121,7 @@ char* runGame(int socket_id,char* name){
 	
 	int x = 0;
    	while(x == 0){
+
 		printf("\n\n\n\nWelcome to the Hangman Gaming System\n\n\n\n");
 		printf("\nPlease enter a selection\n<1> Play Hangman\n<2> Show Leaderboard\n<3> Quit\n\nSelection option 1-3 -> " );
 		fgets(choice, 10, stdin);
@@ -129,8 +130,8 @@ char* runGame(int socket_id,char* name){
 		if(choice[0] == '1'){
 		    //Play Hangman
 			printf("\n%c\n",choice[0]);
-			Hangman(name);
 			Send_Data(socket_id, choice);
+			Hangman(name);
 			x =1;
 		}
 		else if(choice[0] == '2'){
@@ -238,7 +239,7 @@ int main(int argc, char *argv[])
 	}
 
 
-
+	
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 	perror("socket");
 	exit(1);
@@ -248,15 +249,10 @@ int main(int argc, char *argv[])
 	sizeof(struct sockaddr)) == -1) {
 	perror("connect");
 	exit(1);
-	
 	}
 
-	Send_Data(sockfd, "1");
-		
-
-
-	//char* name = username;
-	//runGame(sockfd,name);
+	char* name = username;
+	runGame(sockfd,name);
 
 	return 0;
 }
