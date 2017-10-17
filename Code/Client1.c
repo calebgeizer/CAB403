@@ -155,7 +155,27 @@ char* runGame(int socket_id,char* name){
 
 }
 
+int newRequest(int sockfd, struct hostent *he, struct sockaddr_in their_addr, int port){
 
+	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+	perror("socket");
+	exit(1);
+	}
+
+	their_addr.sin_family = AF_INET;      /* host byte order */
+	their_addr.sin_port = htons(port);    /* short, network byte order */
+	their_addr.sin_addr = *((struct in_addr *)he->h_addr);
+	bzero(&(their_addr.sin_zero), 8);     /* zero the rest of the struct */
+
+	if (connect(sockfd, (struct sockaddr *)&their_addr, \
+	sizeof(struct sockaddr)) == -1) {
+	perror("connect");
+	exit(1);
+	}
+
+	return sockfd;
+
+}
 
 int main(int argc, char *argv[])
 {
@@ -237,19 +257,8 @@ int main(int argc, char *argv[])
 		    printf("\n\n\nYou entered either an incorrect username or password\n");
 		}
 	}
-
-
 	
-	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	perror("socket");
-	exit(1);
-	}
-
-	if (connect(sockfd, (struct sockaddr *)&their_addr, \
-	sizeof(struct sockaddr)) == -1) {
-	perror("connect");
-	exit(1);
-	}
+	sockfd = newRequest(sockfd,he,their_addr, port);
 
 	char* name = username;
 	runGame(sockfd,name);
