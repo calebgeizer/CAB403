@@ -91,14 +91,14 @@ char* response(){
 
 
 
-void Hangman(char* username){
+void Hangman(char* username,char* word){
     
     int x = 0;
     char *choice = "0";
     while(x == 0){
         printf("\n\nGuessed letters:\n\nNumber of gusses left:");
         //get the number of guesses
-        printf("\n\nWord:\n");
+        printf("\n\nWord: %s\n", word);
         //get the word
         printf("\n\nEnter your guess - ");
         choice = response();
@@ -118,6 +118,8 @@ void Hangman(char* username){
 
 char* runGame(int socket_id,char* name){
 	char choice[5];
+	char buf[MAXDATASIZE];
+	int numbytes;
 	
 	int x = 0;
    	while(x == 0){
@@ -131,7 +133,16 @@ char* runGame(int socket_id,char* name){
 		    //Play Hangman
 			printf("\n%c\n",choice[0]);
 			Send_Data(socket_id, choice);
-			Hangman(name);
+
+			if ((numbytes=recv(socket_id, buf, MAXDATASIZE, 0)) == -1) {
+	        	perror("recv");
+	        	exit(1);
+	    	}
+			
+			char* word = buf;
+
+			printf("%s\n", word);
+			Hangman(name, word);
 			x =1;
 		}
 		else if(choice[0] == '2'){
@@ -210,7 +221,7 @@ int main(int argc, char *argv[])
 	their_addr.sin_port = htons(port);    /* short, network byte order */
 	their_addr.sin_addr = *((struct in_addr *)he->h_addr);
 	bzero(&(their_addr.sin_zero), 8);     /* zero the rest of the struct */
-	
+
 
 	sockfd = newRequest(sockfd,he,their_addr, port);
 

@@ -248,8 +248,7 @@ char* checkMenu(char* menu){
 	char *result;
 	if(menu[0] == '1'){
 		printf("Play Hangman\n");
-		//result = hangman();
-		result = "hangman";
+		result = hangman();
 	}
 	if(menu[0] == '2'){
 		printf("Show Leaderboard\n");
@@ -374,25 +373,32 @@ int main(int argc, char *argv[])
 		if (!fork()) { /* this is the child process */
 
 			results = Receive_Data(new_fd,  ARRAY_SIZE);
-			printf("%s\n", results);
+			printf("%s ok\n", results);
 
 			char* answer;
+			char* menu_answer;
 
 
 			if (results[0] == 'b')
 			{
 				answer = checkMessage(results);
-				printf("%s\n", answer);
+
+				if (send(new_fd, answer, sizeof(answer), 0) == -1)
+					perror("send");
+				
+			
 			}else{
-				char* menu_answer = checkMenu(results);
+				menu_answer = checkMenu(results);
+				printf("%s yes\n", menu_answer);
+				printf("%lu \n", strlen(menu_answer));
+				menu_answer[strlen(menu_answer)+1] = '\0';
 
+				if (send(new_fd, menu_answer, strlen(menu_answer), 0) == -1)
+					perror("send");
 			}
-
-			if (send(new_fd, answer, sizeof(answer), 0) == -1)
-				perror("send");
 			close(new_fd);
 			
-			
+
 			exit(0);
 		}
 		
