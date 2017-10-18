@@ -94,9 +94,11 @@ char* response(){
 void Hangman(char* username,char* word){
     
     int x = 0;
-    char *choice = "0";
+    char currentChoice[0];
+    char *choice = NULL;
     while(x == 0){
-        //word = "haemostat toronto\0";
+        word = "haemostat toronto\0";
+        printf("\n\n%s", choice);
 
         //get the number of guesses
         int numGuess = strlen(word)-1 + 10;
@@ -121,18 +123,50 @@ void Hangman(char* username,char* word){
 		        printf("_ ");
         	}
         }
-        
 
-        //get the word
-        printf("\n\nEnter your guess - ");
-        choice = response();
+        int y = 0;     
+        char *answer;   
+        while(y == 0){
+	        //get the word
+	        printf("\n\nEnter your guess - ");
+	        answer = response();
+
+	        printf("\n%s\n",answer);
+
+	        	if(choice != NULL){
+			        printf("%s\n", strpbrk(answer,choice));
+			    }
+
+	        if(strlen(answer) == 1){
+	        	currentChoice[0] = answer[0];
+		        printf("\n current%c",currentChoice[0]);
+	        	if(choice != NULL){
+			        printf("\n%s\n", choice);
+
+	        		if (strpbrk(answer,choice) == NULL)
+	        		{
+				        printf("\n%s",currentChoice);
+				        printf("\n%lu",strlen(choice));
+				        printf("%lu\n", strlen(choice)+1);
+
+
+				        choice[strlen(choice)+1] = currentChoice[0];
+				        choice[strlen(choice)+2] = '\0';
+				        printf("\n%c",choice[2]);
+				        printf("\n%s",choice);
+				        printf("\nyes");
+	        			y = 1;
+	        		}
+	        	}else{
+        			choice = answer;
+		        	y = 1;
+		        }
+	        }
+        }
+
 	
         printf("\n\n-------------------------------------------\n");
 
-        //TEMP QUIT
-        if((strcmp(choice,"Q") == 0)){
-            x = 1;
-        }
     }
 
     printf("\n\nGame Over\n");
