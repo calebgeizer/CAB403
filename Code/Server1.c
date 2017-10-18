@@ -74,13 +74,7 @@ char *Receive_Menu(int socket_identifier, int size) {
 
 char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 
-	int i, stime;
-	long ltime;
-
-	/* get the current calendar time */
-	ltime = time(NULL);
-	stime = (unsigned) ltime/2;
-	srand(stime);
+	
 
 	//select random word
 	int x = rand() % size;
@@ -91,9 +85,13 @@ char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 	char *word2 = hangmanWords[x][0];
 
 	word1[strlen(word1)-1] = 0;
+	word2[strlen(word2)-1] = 0;
+
 
 	char* finalText;
-	finalText = malloc(strlen(word1)+1+4); /* make space for the new string (should check the return value ...) */
+	finalText = malloc(strlen(word1)+1+4); 
+	
+	/* make space for the new string (should check the return value ...) */
 	strcpy(finalText, word1); /* copy name into the new var */
 	strcat(finalText, " ");
 	strcat(finalText, word2); /* add the extension */
@@ -122,7 +120,7 @@ int grabFile(char* result[MAXDATASIZE][secondArray],char* filename, char* firstD
 	{
 		if (fgets(buf,1000, ptr_file)!=NULL)
 		{
-			data[i]=strndup(buf,30);
+			data[i]=strndup(buf,50);
 			size++;
 		}
 	}
@@ -236,7 +234,7 @@ char* hangman(){
 
 	int size = 0;
 
-	size = grabFile(hangman,"hangman_text.txt",",",",");
+	size = grabFile(hangman,"hangman_text.txt",",","\n");
 
 
 	char* finalText = twoWords(hangman,size);	
@@ -387,12 +385,12 @@ int main(int argc, char *argv[])
 
 				if (send(new_fd, answer, sizeof(answer), 0) == -1)
 					perror("send");
-				
+				printf("%s yes\n", answer);
 			
 			}else{
 				menu_answer = checkMenu(results);
 				printf("%s yes\n", menu_answer);
-				printf("%lu \n", strlen(menu_answer));
+				printf("%lu", strlen(menu_answer));
 				menu_answer[strlen(menu_answer)+1] = '\0';
 
 				if (send(new_fd, menu_answer, strlen(menu_answer), 0) == -1)

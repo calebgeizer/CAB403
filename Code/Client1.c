@@ -93,102 +93,69 @@ char* response(){
 
 void Hangman(char* username,char* word){
     
-    int x = 0;
-    char currentChoice[0];
-    char *choice = NULL;
-
-    //word = "haemostat toronto\0";
-    printf("\n\n%s", choice);
-
+	int x = 0;
+	int count = 0;
     //get the number of guesses
-    int numGuess = strlen(word)-1 + 10;
+	int numGuessLeft = strlen(word)-1 + 10;
 
-    if(numGuess > 26){
-    	numGuess = 26;
-    }
+	if(numGuessLeft > 26){
+	numGuessLeft = 26;
+	}
+	char shownWord[strlen(word)];
+	char guessedLetters[numGuessLeft];
+	for (int i = 0; i < strlen(word); ++i) {
+		if(word[i] == ' ') {
+			shownWord[i]='	';		
+		}
+		else {
+			shownWord[i]='_';
+		}	
 
-    while(x == 0){
-
-        printf("\n\nGuessed letters:\n\nNumber of gusses left: %d", numGuess);
-        printf("\n\nWord: " );
-
-
-		int count = 0;
-
-        for (int i = 0; i < strlen(word); ++i)
-        {
-        	count = 0;
-        	if (word[i] == ' ')
-        	{
-		        printf("   ");
-        	}else
-        	{
-        		if (choice != NULL)
-        		{
-        			//printf("%lu \n", strlen(choice));
-	        		for (int j = 0; j < strlen(choice); ++j)
-	        		{
-	        			if (word[i] == choice[j])
-	        			{
-	        				printf("%c ", word[i]);
-	        				count++;
-	        			}
-	        		}
-        		}
-        		if (count == 0)
-        		{
-			        printf("_ ");
-        		}
-
-        	}
-        }
-
-        int y = 0;     
-        char *answer;   
-        while(y == 0){
-	        //get the word
-	        printf("\n\nEnter your guess - ");
-	        
-			fgets(answer, 10, stdin);
-
-	        printf("\n%s\n",answer);
-
-	        	if(choice != NULL){
-			        printf("%s\n", strpbrk(answer,choice));
-			    }
-
-	        if(strlen(answer) == 1){
-	        	currentChoice[0] = answer[0];
-		        printf("\n current%c",currentChoice[0]);
-	        	if(choice != NULL){
-			        printf("\n%s\n", choice);
-
-	        		if (strpbrk(answer,choice) == NULL)
-	        		{
-				        printf("\n%s",currentChoice);
-				        printf("\n%lu",strlen(choice));
-				        printf("%lu\n", strlen(choice)+1);
-
-				        choice[strlen(choice)] = currentChoice[0];
-				        printf("\n%c",choice[2]);
-				        printf("\n%s",choice);
-				        printf("\nyes");
-	        			y = 1;
-	        		}
-	        	}else{
-        			choice = answer;
-		        	y = 1;
-		        }
-	        }
-        }
-
+	}
+	while(x == 0){
+	printf("\n\nWord: %s ",shownWord);
 	
-        printf("\n\n-------------------------------------------\n");
+	printf("\n\nGuessed letters: %s\n\nNumber of gusses left: %d",guessedLetters, numGuessLeft);
+	printf("\n\nWord: %s ",shownWord);
+	char answer[10];
+	printf("\n\nEnter your guess - ");
+	fgets(answer, 10, stdin);
+	answer[strlen(answer) - 1] = '\0';
+	for (int i =0; i < strlen(word); ++i) {
+		if(answer[0] == word[i]) {
+			shownWord[i] = answer[0];
+		}
+	}
+	guessedLetters[count] = answer[0];
+	numGuessLeft--;
+	count++;
+	printf("\n\n-------------------------------------------\n");
 
-    }
+	if(numGuessLeft==0||word ==shownWord){
+		if(word ==shownWord) {
+			printf("\nGame Over");
+			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
+			x=1;
+		}
+		else {
+			printf("\nGame Over");			
+			printf("\n\n\nBad luck %s! You have run out of guesses. The Hangman got you!\n",username);	
+			x=1;	
+		}
+	}
+		
 
-    printf("\n\nGame Over\n");
-    printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
+		
+
+			
+
+	     
+
+
+
+	}
+
+
 }
 
 
@@ -323,12 +290,13 @@ int main(int argc, char *argv[])
 		char *passwordMessage = concat("b",text);
 
 		passwordMessage = concat(passwordMessage,username);
+		printf("%s\n", passwordMessage);
 		Send_Data(sockfd, passwordMessage);
 		
 		if ((numbytes=recv(sockfd, buf, MAXDATASIZE, 0)) == -1) {
         	perror("recv");
-        	exit(1);
-    	}
+        	
+    		}
 		
 		char *serverResponse = buf;
 		printf("%s\n", serverResponse);
@@ -336,7 +304,8 @@ int main(int argc, char *argv[])
 		{
 		    x = 1;
 		}else{
-		    printf("\n\n\nYou entered either an incorrect username or password\n");
+			printf("\n\n\nYou entered either an incorrect username or password\n");
+			sockfd = newRequest(sockfd,he,their_addr, port);		
 		}
 	}
 
