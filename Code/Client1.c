@@ -97,7 +97,7 @@ void Hangman(char* username,char* word){
     char currentChoice[0];
     char *choice = NULL;
 
-    word = "haemostat toronto\0";
+    //word = "haemostat toronto\0";
     printf("\n\n%s", choice);
 
     //get the number of guesses
@@ -148,7 +148,8 @@ void Hangman(char* username,char* word){
         while(y == 0){
 	        //get the word
 	        printf("\n\nEnter your guess - ");
-	        answer = response();
+	        
+			fgets(answer, 10, stdin);
 
 	        printf("\n%s\n",answer);
 

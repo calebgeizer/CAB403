@@ -78,17 +78,19 @@ char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 	long ltime;
 
 	/* get the current calendar time */
-	//ltime = time(NULL);
-	//stime = (unsigned) ltime/2;
-	//srand(stime);
+	ltime = time(NULL);
+	stime = (unsigned) ltime/2;
+	srand(stime);
 
 	//select random word
 	int x = rand() % size;
 	int y = rand() % size;
 
 
-	char *word1 = hangmanWords[x][0];
-	char *word2 = hangmanWords[y][0];
+	char *word1 = hangmanWords[x][1];
+	char *word2 = hangmanWords[x][0];
+
+	word1[strlen(word1)-1] = 0;
 
 	char* finalText;
 	finalText = malloc(strlen(word1)+1+4); /* make space for the new string (should check the return value ...) */
