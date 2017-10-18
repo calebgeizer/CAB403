@@ -96,31 +96,50 @@ void Hangman(char* username,char* word){
     int x = 0;
     char currentChoice[0];
     char *choice = NULL;
+
+    word = "haemostat toronto\0";
+    printf("\n\n%s", choice);
+
+    //get the number of guesses
+    int numGuess = strlen(word)-1 + 10;
+
+    if(numGuess > 26){
+    	numGuess = 26;
+    }
+
     while(x == 0){
-        word = "haemostat toronto\0";
-        printf("\n\n%s", choice);
-
-        //get the number of guesses
-        int numGuess = strlen(word)-1 + 10;
-
-        if(numGuess > 26){
-        	numGuess = 26;
-        }
 
         printf("\n\nGuessed letters:\n\nNumber of gusses left: %d", numGuess);
         printf("\n\nWord: " );
 
 
-        int j = 0;
+		int count = 0;
 
         for (int i = 0; i < strlen(word); ++i)
         {
+        	count = 0;
         	if (word[i] == ' ')
         	{
 		        printf("   ");
         	}else
         	{
-		        printf("_ ");
+        		if (choice != NULL)
+        		{
+        			//printf("%lu \n", strlen(choice));
+	        		for (int j = 0; j < strlen(choice); ++j)
+	        		{
+	        			if (word[i] == choice[j])
+	        			{
+	        				printf("%c ", word[i]);
+	        				count++;
+	        			}
+	        		}
+        		}
+        		if (count == 0)
+        		{
+			        printf("_ ");
+        		}
+
         	}
         }
 
@@ -149,9 +168,7 @@ void Hangman(char* username,char* word){
 				        printf("\n%lu",strlen(choice));
 				        printf("%lu\n", strlen(choice)+1);
 
-
-				        choice[strlen(choice)+1] = currentChoice[0];
-				        choice[strlen(choice)+2] = '\0';
+				        choice[strlen(choice)] = currentChoice[0];
 				        printf("\n%c",choice[2]);
 				        printf("\n%s",choice);
 				        printf("\nyes");
