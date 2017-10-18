@@ -96,9 +96,33 @@ void Hangman(char* username,char* word){
     int x = 0;
     char *choice = "0";
     while(x == 0){
-        printf("\n\nGuessed letters:\n\nNumber of gusses left:");
+        //word = "haemostat toronto\0";
+
         //get the number of guesses
-        printf("\n\nWord: %s\n", word);
+        int numGuess = strlen(word)-1 + 10;
+
+        if(numGuess > 26){
+        	numGuess = 26;
+        }
+
+        printf("\n\nGuessed letters:\n\nNumber of gusses left: %d", numGuess);
+        printf("\n\nWord: " );
+
+
+        int j = 0;
+
+        for (int i = 0; i < strlen(word); ++i)
+        {
+        	if (word[i] == ' ')
+        	{
+		        printf("   ");
+        	}else
+        	{
+		        printf("_ ");
+        	}
+        }
+        
+
         //get the word
         printf("\n\nEnter your guess - ");
         choice = response();
@@ -138,12 +162,15 @@ char* runGame(int socket_id,char* name){
 	        	perror("recv");
 	        	exit(1);
 	    	}
+
+			printf("%lu\n", strlen(buf));
+
 			
 			char* word = buf;
 
 			printf("%s\n", word);
 			Hangman(name, word);
-			x =1;
+			x = 1;
 		}
 		else if(choice[0] == '2'){
 		    //Show Leaderboard
