@@ -88,13 +88,25 @@ char* response(){
 
 // Sends the server a message and gets a response
 
-
-
+int checker(char first[], char second[]){
+	int result;
+	for(int i=0; first[i]!='\0' && second[i]!='\0'; i++) {
+		if(first[i] !=second[i]) {
+			result =0;
+			break;
+		}
+		else{
+			result =1;
+		}
+	}
+	return result;
+}
 
 void Hangman(char* username,char* word){
     
 	int x = 0;
 	int count = 0;
+	int chk;
     //get the number of guesses
 	int numGuessLeft = strlen(word)-1 + 10;
 
@@ -106,7 +118,7 @@ void Hangman(char* username,char* word){
 	
 	char shownWord[strlen(correct)];
 	char guessedLetters[numGuessLeft+1];
-	guessedLetters[numGuessLeft+1] = '\0';
+	
 	for (int i = 0; i < strlen(word); ++i) {
 		if(isalpha(word[i])) {
 			correct[i] = word[i];
@@ -144,15 +156,17 @@ void Hangman(char* username,char* word){
 		guessedLetters[count] = answer[0];
 		numGuessLeft--;
 		count++;
+		guessedLetters[count] = '\0';
 		printf("\n\n-------------------------------------------\n");
-
-		if(shownWord==correct) {
+		chk=checker(shownWord,correct);
+		printf("\nchecking %d", chk);
+		if(chk==1) {
 			printf("\nGame Over");
 			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
 				x=1;
 		}
 		if(numGuessLeft == 0){
-			if(correct ==shownWord) {
+			if(chk==1) {
 				printf("\nGame Over");
 				printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
 				x=1;
