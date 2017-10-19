@@ -102,7 +102,8 @@ void Hangman(char* username,char* word){
 	numGuessLeft = 26;
 	}
 	char shownWord[strlen(word)];
-	char guessedLetters[numGuessLeft];
+	char guessedLetters[numGuessLeft+1];
+	guessedLetters[numGuessLeft+1] = '\0';
 	for (int i = 0; i < strlen(word); ++i) {
 		if(word[i] == ' ') {
 			shownWord[i]='	';		
@@ -114,7 +115,9 @@ void Hangman(char* username,char* word){
 	while(x == 0){
 	printf("\n\nWord: %s ",shownWord);
 	
-	printf("\n\nGuessed letters: %s\n\nNumber of gusses left: %d",guessedLetters, numGuessLeft);
+	printf("\n\nGuessed letters:");
+	printf("%s\n\n",guessedLetters);
+	printf("Number of gusses left: %d", numGuessLeft);
 	printf("\n\nWord: %s ",shownWord);
 	char answer[10];
 	printf("\n\nEnter your guess - ");
