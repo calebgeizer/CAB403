@@ -21,7 +21,7 @@
 	#define secondArray 2
 
 	#define MYPORT 12345    /* the port users will be connecting to */
-	#define ARRAY_SIZE 30 
+	#define ARRAY_SIZE 50 
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
 
@@ -70,7 +70,13 @@ char *Receive_Menu(int socket_identifier, int size) {
 	return results;
 }
 
-
+char* concat(char* first, char* second){
+    char* concatinated;
+    concatinated = malloc(strlen(first)+strlen(second)); /* make space for the new string (should check the return value ...) */
+    strcpy(concatinated, first); /* copy name into the new var */
+    strcat(concatinated, second); /* add the extension */
+    return concatinated;
+}
 
 char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 
@@ -91,17 +97,9 @@ char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 	char *word1 = hangmanWords[x][1];
 	char *word2 = hangmanWords[x][0];
 
-	word1[strlen(word1)] = 0;
-	word2[strlen(word2)] = 0;
-
-
-	char* finalText;
-	finalText = malloc(strlen(word1)+1+4); 
 	
-	/* make space for the new string (should check the return value ...) */
-	strcpy(finalText, word1); /* copy name into the new var */
-	strcat(finalText, " ");
-	strcat(finalText, word2); /* add the extension */
+	char*finalText = concat(word1, "\t");
+	finalText = concat(finalText, word2);
 
 	return finalText;
 }
@@ -245,7 +243,7 @@ char* hangman(){
 
 
 	char* finalText = twoWords(hangman,size);	
-
+	finalText[strlen(finalText)] = '\0';
 	printf("%s\n", finalText);
 
 	return finalText;
@@ -392,16 +390,20 @@ int main(int argc, char *argv[])
 
 				if (send(new_fd, answer, sizeof(answer), 0) == -1)
 					perror("send");
-				printf("%s yes\n", answer);
+				printf("%syes\n", answer);
 			
 			}else{
 				menu_answer = checkMenu(results);
-				printf("%s yes\n", menu_answer);
+				int len = strlen(menu_answer) +1;
+				//menu_answer =malloc(len);
 				printf("%lu", strlen(menu_answer));
-				menu_answer[strlen(menu_answer)+1] = '\0';
+				
 
-				if (send(new_fd, menu_answer, strlen(menu_answer), 0) == -1)
+				if (send(new_fd, menu_answer, len, 0) == -1)
 					perror("send");
+
+
+				free(menu_answer);
 			}
 			close(new_fd);
 			

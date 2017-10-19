@@ -93,7 +93,6 @@ char* response(){
 
 void Hangman(char* username,char* word){
     
-	int i = 0;
 	int x = 0;
 	int count = 0;
     //get the number of guesses
@@ -102,69 +101,75 @@ void Hangman(char* username,char* word){
 	if(numGuessLeft > 26){
 	numGuessLeft = 26;
 	}
-	char shownWord[strlen(word)];
-
-	char guessedLetters[0];
-
-	for (i = 0; i < strlen(word); ++i) {
-		if(word[i] == ' ') {
-			shownWord[i]=' ';		
+	
+	char correct[strlen(word)];
+	
+	char shownWord[strlen(correct)];
+	char guessedLetters[numGuessLeft+1];
+	guessedLetters[numGuessLeft+1] = '\0';
+	for (int i = 0; i < strlen(word); ++i) {
+		if(isalpha(word[i])) {
+			correct[i] = word[i];
+			
 		}
 		else {
+			correct[i]=' ';
+		}			
+	
+	}
+	for (int i = 0; i < strlen(correct); ++i) {
+		if(isalpha(correct[i])) {
 			shownWord[i]='_';
+			
+		}
+		else {
+			shownWord[i]=' ';
 		}	
 	}
-	shownWord[i] = '\0';
-
 	while(x == 0){
-	//printf("\n\nWord: %s",shownWord);
-	printf("\n%d\n",count);
-	printf("Guessed letters:%s\n",guessedLetters);
-	printf("Number of guesses left: %d", numGuessLeft);
-	printf("\n\nWord: %s ",shownWord);
-	char answer[10];
-	printf("\n\nEnter your guess - ");
-	fgets(answer, 10, stdin);
-	//answer[strlen(answer) - 1] = '\0';
-	for (i =0; i < strlen(word); ++i) {
-		if(answer[0] == word[i]) {
-			shownWord[i] = answer[0];
+		
+		printf("\n\nGuessed letters:%s",guessedLetters);
+		printf("\n\nNumber of gusses left: %d", numGuessLeft);
+		printf("\n\nWord: %s ",shownWord);
+		printf("\n\nWord: %s ",correct);
+		char answer[10];
+		printf("\n\nEnter your guess - ");
+		fgets(answer, 10, stdin);
+		answer[strlen(answer) - 1] = '\0';
+		for (int i =0; i < strlen(correct); ++i) {
+			if(answer[0] == correct[i]) {
+				shownWord[i] = answer[0];
+			}
 		}
-	}
-	guessedLetters[count] = answer[0];
-	guessedLetters[count+1] = '\0';
-	printf("%d\n", count);
-	printf("%d\n", count+1);
-	numGuessLeft--;
-	count++;
-	printf("\n\n-------------------------------------------\n");
+		guessedLetters[count] = answer[0];
+		numGuessLeft--;
+		count++;
+		printf("\n\n-------------------------------------------\n");
 
-	printf("%d\n", strcmp(word,shownWord));
-	printf("%lu\n", strlen(word));
-
-	if(numGuessLeft == 0 || strncmp(word,shownWord,strlen(word)) == 0){
-		if(strncmp(word,shownWord,strlen(word)) == 0) {
+		if(shownWord==correct) {
 			printf("\nGame Over");
 			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
-			x=1;
+				x=1;
 		}
-		else {
-			printf("\nGame Over");			
-			printf("\n\n\nBad luck %s! You have run out of guesses. The Hangman got you!\n",username);	
-			x=1;	
+		if(numGuessLeft == 0){
+			if(correct ==shownWord) {
+				printf("\nGame Over");
+				printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
+				x=1;
+			}
+			else {
+				printf("\nGame Over");			
+				printf("\n\n\nBad luck %s! You have run out of guesses. The Hangman got you!\n",username);	
+				x=1;	
+			}
 		}
+		
+
+		
 	}
-		
-
-		
-
 			
 
-	     
-
-
-
-	}
+	  
 
 
 }
@@ -192,15 +197,15 @@ char* runGame(int socket_id,char* name){
 	        	perror("recv");
 	        	exit(1);
 	    	}
-
-			printf("%lu\n", strlen(buf));
+			buf[strlen(buf)] = '\0';
+			
 
 			
 			char* word = buf;
 
 			word[strlen(word)] = '\0';
 
-			printf("%s\n", word);
+			
 			Hangman(name, word);
 			x = 1;
 		}
