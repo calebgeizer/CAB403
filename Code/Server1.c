@@ -70,6 +70,34 @@ char *Receive_Menu(int socket_identifier, int size) {
 	return results;
 }
 
+
+struct leaderboard
+{
+	char* clientName;
+	int gamesPlayed;
+	int gamesWon;
+};
+
+struct leaderboard createLeaderboard(char* username){
+	struct leaderboard user;
+
+	strcpy(user.clientName, username);
+	user.gamesPlayed = 0;
+	user.gamesWon = 0;
+
+	return user;
+}
+
+void leaderboard(){
+	struct leaderboard user;
+
+	user = createLeaderboard("Anna");
+	user.gamesPlayed++;
+
+	printf("Player - %s\nNumber of games won - %d\nNumber of games played - %d\n", user.clientName,user.gamesWon,user.gamesPlayed);
+}
+
+
 char* concat(char* first, char* second){
     char* concatinated;
     concatinated = malloc(strlen(first)+strlen(second)); /* make space for the new string (should check the return value ...) */
@@ -257,6 +285,7 @@ char* checkMenu(char* menu){
 	}
 	if(menu[0] == '2'){
 		printf("Show Leaderboard\n");
+		leaderboard();
 	}
 	if(menu[0] == '3'){
 		printf("Quit\n");
@@ -390,6 +419,7 @@ int main(int argc, char *argv[])
 
 				if (send(new_fd, answer, sizeof(answer), 0) == -1)
 					perror("send");
+
 				printf("%syes\n", answer);
 			
 			}else{
