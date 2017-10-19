@@ -120,12 +120,12 @@ void Hangman(char* username,char* word){
 	//printf("\n\nWord: %s",shownWord);
 	printf("\n%d\n",count);
 	printf("Guessed letters:%s\n",guessedLetters);
-	printf("Number of gusses left: %d", numGuessLeft);
+	printf("Number of guesses left: %d", numGuessLeft);
 	printf("\n\nWord: %s ",shownWord);
 	char answer[10];
 	printf("\n\nEnter your guess - ");
 	fgets(answer, 10, stdin);
-	answer[strlen(answer) - 1] = '\0';
+	//answer[strlen(answer) - 1] = '\0';
 	for (i =0; i < strlen(word); ++i) {
 		if(answer[0] == word[i]) {
 			shownWord[i] = answer[0];
@@ -133,6 +133,8 @@ void Hangman(char* username,char* word){
 	}
 	guessedLetters[count] = answer[0];
 	guessedLetters[count+1] = '\0';
+	printf("%d\n", count);
+	printf("%d\n", count+1);
 	numGuessLeft--;
 	count++;
 	printf("\n\n-------------------------------------------\n");
