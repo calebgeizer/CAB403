@@ -8,10 +8,13 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <stddef.h> // for NULL
 
 #define PORT 12345    /* the port client will be connecting to */
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
+
+
 
 void quit() /* write error message and quit */
 {

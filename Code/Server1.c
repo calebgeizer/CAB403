@@ -14,8 +14,12 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <stddef.h> // for NULL
 
 
+
+	#define NAME_LENGTH 256
+	#define PEOPLE 10
 
 	#define MAXDATASIZE 500
 	#define secondArray 2
@@ -25,7 +29,37 @@
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
 
+typedef struct person person_t;
+struct person {
+    char *name;
+    int Won;
+    int played;
+};
+void person_print(person_t *p) {
+    printf("name=%s age=%dyears height=%dcm\n", p->name, p->Won, p->played);
+}
 
+
+
+typedef struct node node_t;
+
+// a node in a linked list of people
+struct node {
+    person_t *person;
+    node_t *next;
+};
+node_t * node_add(node_t *head, person_t *person) {
+    // create new node to add to list
+    node_t *new = (node_t *)malloc(sizeof(node_t));
+    if (new == NULL) {
+        return NULL;
+    }
+
+    // insert new node
+    new->person = person;
+    new->next = head;
+    return new;
+}
 
 char *Receive_Data(int socket_identifier, int size) {
     int number_of_bytes, i=0;
@@ -341,6 +375,7 @@ char* checkMessage(char* message){
 		{
 			return "success";
 			
+			
 		}
 
 		return "fail";
@@ -396,7 +431,7 @@ int main(int argc, char *argv[])
 	}
 
 	printf("server starts listening ...\n");
-
+	node_t *people_list = NULL;
 	/* repeat: accept, send, close the connection */
 	/* for every accepted connection, use a sepetate process or thread to serve it */
 	while(1) {  /* main accept() loop */
