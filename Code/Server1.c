@@ -29,37 +29,17 @@
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
 
-typedef struct person person_t;
-struct person {
+
+struct person 
+{
     char *name;
-    int Won;
+    int won ;
     int played;
 };
-void person_print(person_t *p) {
-    printf("name=%s age=%dyears height=%dcm\n", p->name, p->Won, p->played);
-}
 
 
 
-typedef struct node node_t;
 
-// a node in a linked list of people
-struct node {
-    person_t *person;
-    node_t *next;
-};
-node_t * node_add(node_t *head, person_t *person) {
-    // create new node to add to list
-    node_t *new = (node_t *)malloc(sizeof(node_t));
-    if (new == NULL) {
-        return NULL;
-    }
-
-    // insert new node
-    new->person = person;
-    new->next = head;
-    return new;
-}
 
 char *Receive_Data(int socket_identifier, int size) {
     int number_of_bytes, i=0;
@@ -315,7 +295,7 @@ char* hangman(){
 	return finalText;
 }
 
-char* checkMenu(char* menu){
+char* checkMenu(char* menu) {
 	char *result;
 	if(menu[0] == '1'){
 		printf("Play Hangman\n");
@@ -385,7 +365,42 @@ char* checkMessage(char* message){
 	return message;
 }
 
+char* Message(char* message){
+	//checks what the message is to give the client a response
 
+
+	char label[3];
+	char pass[6];
+	char username[8];
+	char *user;
+	label[0] = message[0];
+	
+
+	//if authentication
+	if (label[0] == 'b')
+	{
+		char *text;
+		text = message + 1;
+		user = message + 7;
+
+		for (int i = 0; i < 8; ++i)
+		{
+			username[i] = user[i];
+		}
+
+		for (int i = 0; i < 7; ++i)
+		{
+			if (i < 6)
+			{
+				pass[i] = text[i];
+			}
+			if (i == 6)
+			{
+				pass[i] = '\0';
+			}
+		}
+	}
+}
 int main(int argc, char *argv[])
 {
 	int sockfd, new_fd,port;  /* listen on sock_fd, new connection on new_fd */
@@ -394,7 +409,7 @@ int main(int argc, char *argv[])
 	socklen_t sin_size;
 	char *results;
 	char *menu;
-
+	int id = 0;
 	if (argc <= 1)
 	{
 		port = MYPORT;
@@ -431,7 +446,8 @@ int main(int argc, char *argv[])
 	}
 
 	printf("server starts listening ...\n");
-	node_t *people_list = NULL;
+	struct person per[PEOPLE];
+	
 	/* repeat: accept, send, close the connection */
 	/* for every accepted connection, use a sepetate process or thread to serve it */
 	while(1) {  /* main accept() loop */
@@ -447,26 +463,33 @@ int main(int argc, char *argv[])
 
 			results = Receive_Data(new_fd,  ARRAY_SIZE);
 			printf("%s ok\n", results);
-
+			
 			char* answer;
 			char* menu_answer;
-
-
+			char* name;
+			
 			if (results[0] == 'b')
 			{
 				answer = checkMessage(results);
-
+				name = Message(results);
 				if (send(new_fd, answer, sizeof(answer), 0) == -1)
 					perror("send");
 
 				printf("%syes\n", answer);
-			
+				if(answer=="success") {
+					per[id].name = name;
+				}
 			}else{
 				menu_answer = checkMenu(results);
+				if (menu_answer == "1") {
+					per[id].played++;
+				}
 				int len = strlen(menu_answer) +1;
 				//menu_answer =malloc(len);
 				printf("%lu", strlen(menu_answer));
-				
+				if (results = "won") {
+					per[id].won++;
+				}
 
 				if (send(new_fd, menu_answer, len, 0) == -1)
 					perror("send");
@@ -475,13 +498,17 @@ int main(int argc, char *argv[])
 				free(menu_answer);
 			}
 			close(new_fd);
+			//printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
 			
 
 			exit(0);
 		}
 		
 		close(new_fd);  /* parent doesn't need this */
-
+		
 		while(waitpid(-1,NULL,WNOHANG) > 0); /* clean up child processes */
+		
 	}
+	id++;	
+	//printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
 }

@@ -124,7 +124,7 @@ int Hangman(char* username,char* word){
 	correct[strlen(word)] = '\0';
 	
 	char shownWord[strlen(correct)];
-	char guessedLetters[1];
+	char *guessedLetters;
 	
 	for (int i = 0; i < strlen(word); ++i) {
 		if(isalpha(word[i])) {
@@ -178,6 +178,7 @@ int Hangman(char* username,char* word){
 			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
 			won = 1;
 				x=1;
+				guessedLetters =NULL;
 		}
 		if(numGuessLeft == 0){
 			if(chk==1) {
@@ -185,12 +186,14 @@ int Hangman(char* username,char* word){
 				printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
 				won = 1;
 				x=1;
+				guessedLetters =NULL;
 			}
 			else {
 				printf("\nGame Over");			
 				printf("\n\n\nBad luck %s! You have run out of guesses. The Hangman got you!\n",username);	
 				won = 0;
-				x=1;	
+				x=1;
+				guessedLetters =NULL;	
 			}
 		}
 		
