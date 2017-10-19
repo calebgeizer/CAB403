@@ -93,6 +93,7 @@ char* response(){
 
 void Hangman(char* username,char* word){
     
+	int i = 0;
 	int x = 0;
 	int count = 0;
     //get the number of guesses
@@ -102,39 +103,45 @@ void Hangman(char* username,char* word){
 	numGuessLeft = 26;
 	}
 	char shownWord[strlen(word)];
-	char guessedLetters[numGuessLeft+1];
-	guessedLetters[numGuessLeft+1] = '\0';
-	for (int i = 0; i < strlen(word); ++i) {
+
+	char guessedLetters[0];
+
+	for (i = 0; i < strlen(word); ++i) {
 		if(word[i] == ' ') {
-			shownWord[i]='	';		
+			shownWord[i]=' ';		
 		}
 		else {
 			shownWord[i]='_';
 		}	
 	}
+	shownWord[i] = '\0';
+
 	while(x == 0){
-	printf("\n\nWord: %s ",shownWord);
-	
-	printf("\n\nGuessed letters:");
-	printf("%s\n\n",guessedLetters);
+	//printf("\n\nWord: %s",shownWord);
+	printf("\n%d\n",count);
+	printf("Guessed letters:%s\n",guessedLetters);
 	printf("Number of gusses left: %d", numGuessLeft);
 	printf("\n\nWord: %s ",shownWord);
 	char answer[10];
 	printf("\n\nEnter your guess - ");
 	fgets(answer, 10, stdin);
 	answer[strlen(answer) - 1] = '\0';
-	for (int i =0; i < strlen(word); ++i) {
+	for (i =0; i < strlen(word); ++i) {
 		if(answer[0] == word[i]) {
 			shownWord[i] = answer[0];
 		}
 	}
 	guessedLetters[count] = answer[0];
+	guessedLetters[count+1] = '\0';
 	numGuessLeft--;
 	count++;
 	printf("\n\n-------------------------------------------\n");
 
-	if(numGuessLeft==0||word ==shownWord){
-		if(word ==shownWord) {
+	printf("%d\n", strcmp(word,shownWord));
+	printf("%lu\n", strlen(word));
+
+	if(numGuessLeft == 0 || strncmp(word,shownWord,strlen(word)) == 0){
+		if(strncmp(word,shownWord,strlen(word)) == 0) {
 			printf("\nGame Over");
 			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
 			x=1;
