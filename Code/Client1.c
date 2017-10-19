@@ -93,7 +93,9 @@ char* response(){
 
 int checker(char first[], char second[]){
 	int result;
-	for(int i=0; first[i]!='\0' && second[i]!='\0'; i++) {
+	int i;
+
+	for(i=0; first[i]!='\0' && second[i]!='\0'; i++) {
 		if(first[i] !=second[i]) {
 			result =0;
 			break;
@@ -102,11 +104,12 @@ int checker(char first[], char second[]){
 			result =1;
 		}
 	}
+
 	return result;
 }
 
-void Hangman(char* username,char* word){
-    
+int Hangman(char* username,char* word){
+	int won = 0;
 	int x = 0;
 	int count = 0;
 	int chk;
@@ -118,9 +121,10 @@ void Hangman(char* username,char* word){
 	}
 	
 	char correct[strlen(word)];
+	correct[strlen(word)] = '\0';
 	
 	char shownWord[strlen(correct)];
-	char guessedLetters[numGuessLeft+1];
+	char guessedLetters[1];
 	
 	for (int i = 0; i < strlen(word); ++i) {
 		if(isalpha(word[i])) {
@@ -148,8 +152,14 @@ void Hangman(char* username,char* word){
 		printf("\n\nWord: %s ",shownWord);
 		printf("\n\nWord: %s ",correct);
 		char answer[10];
-		printf("\n\nEnter your guess - ");
-		fgets(answer, 10, stdin);
+		int z = 0;
+		while(z == 0){
+			printf("\n\nEnter your guess - ");
+			fgets(answer, 10, stdin);
+			if(strlen(answer) == 2){
+				z = 1;
+			}
+		}
 		answer[strlen(answer) - 1] = '\0';
 		for (int i =0; i < strlen(correct); ++i) {
 			if(answer[0] == correct[i]) {
@@ -166,36 +176,34 @@ void Hangman(char* username,char* word){
 		if(chk==1) {
 			printf("\nGame Over");
 			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
+			won = 1;
 				x=1;
 		}
 		if(numGuessLeft == 0){
 			if(chk==1) {
 				printf("\nGame Over");
 				printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
+				won = 1;
 				x=1;
 			}
 			else {
 				printf("\nGame Over");			
 				printf("\n\n\nBad luck %s! You have run out of guesses. The Hangman got you!\n",username);	
+				won = 0;
 				x=1;	
 			}
 		}
 		
-
-		
 	}
-			
-
-	  
-
-
+	return won;	
 }
 
 
-char* runGame(int socket_id,char* name){
+int runGame(int socket_id,char* name){
 	char choice[5];
 	char buf[MAXDATASIZE];
 	int numbytes;
+	int quit;
 	
 	int x = 0;
    	while(x == 0){
@@ -223,28 +231,33 @@ char* runGame(int socket_id,char* name){
 			word[strlen(word)] = '\0';
 
 			
-			Hangman(name, word);
+			int won = Hangman(name, word);
 			x = 1;
+			quit = 3;
+			if (won == 1)
+			{
+				quit = 2;
+			}
 		}
 		else if(choice[0] == '2'){
 		    //Show Leaderboard
 			printf("LEADERBOARD\n");
 			Send_Data(socket_id, choice);
 			x =1;
+			quit = 0;
 		}
 		else if(choice[0] == '3'){
 		    //Quit
 			printf("QUIT\n");
 			Send_Data(socket_id, choice);
 			x =1;
-		    
+		    quit = 1;
 		}
 		else {
 			printf("Please enter a valid number 1 -3\n");	
 		}
     }
-    
-
+    return quit;
 }
 
 int newRequest(int sockfd, struct hostent *he, struct sockaddr_in their_addr, int port){
@@ -344,10 +357,32 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	sockfd = newRequest(sockfd,he,their_addr, port);
+	x = 0;
+	int won = 0;
 
-	char* name = username;
-	runGame(sockfd,name);
+	while(x == 0){
+		sockfd = newRequest(sockfd,he,their_addr, port);
+
+		char* name = username;
+		int result = runGame(sockfd,name);
+
+		if (result == 2)
+		{
+			//Game Won Send
+			sockfd = newRequest(sockfd,he,their_addr, port);
+			Send_Data(sockfd, "won");
+		}
+		if (result == 3)
+		{
+			//Game Lost Send
+			sockfd = newRequest(sockfd,he,their_addr, port);
+			Send_Data(sockfd, "lost");
+		}
+		if (result == 1)
+		{
+			x = 1;
+		}
+	}
 
 	return 0;
 }
