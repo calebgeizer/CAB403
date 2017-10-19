@@ -78,25 +78,29 @@ struct leaderboard
 	int gamesWon;
 };
 
-struct leaderboard createLeaderboard(char* username){
-	struct leaderboard user;
+void leaderboards(){
+     int i;
+     struct leaderboard record[2];
 
-	strcpy(user.clientName, username);
-	user.gamesPlayed = 0;
-	user.gamesWon = 0;
+     // 1st student's record
+     record[0].gamesPlayed=1;
+     strcpy(record[0].clientName, "Raju");
 
-	return user;
+     // 2nd student's record         
+     record[1].gamesPlayed=2;
+     strcpy(record[1].clientName, "Surendren");
+
+     // 3rd student's record
+     record[2].gamesPlayed=3;
+     strcpy(record[2].clientName, "Thiyagu");
+
+     for(i=0; i<3; i++)
+     {
+         printf(" gamesPlayed: %d \n", record[i].gamesPlayed);
+         printf(" Name is: %s \n", record[i].clientName);
+     }
+
 }
-
-void leaderboard(){
-	struct leaderboard user;
-
-	user = createLeaderboard("Anna");
-	user.gamesPlayed++;
-
-	printf("Player - %s\nNumber of games won - %d\nNumber of games played - %d\n", user.clientName,user.gamesWon,user.gamesPlayed);
-}
-
 
 char* concat(char* first, char* second){
     char* concatinated;
@@ -285,7 +289,7 @@ char* checkMenu(char* menu){
 	}
 	if(menu[0] == '2'){
 		printf("Show Leaderboard\n");
-		leaderboard();
+		leaderboards();
 	}
 	if(menu[0] == '3'){
 		printf("Quit\n");
