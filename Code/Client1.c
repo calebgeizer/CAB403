@@ -110,7 +110,6 @@ void Hangman(char* username,char* word){
 		else {
 			shownWord[i]='_';
 		}	
-
 	}
 	while(x == 0){
 	printf("\n\nWord: %s ",shownWord);
@@ -186,6 +185,8 @@ char* runGame(int socket_id,char* name){
 
 			
 			char* word = buf;
+
+			word[strlen(word)] = '\0';
 
 			printf("%s\n", word);
 			Hangman(name, word);
