@@ -2,7 +2,7 @@
 *  Materials downloaded from the web. See relevant web sites listed on OLT
 *  Collected and modified for teaching purpose only by Jinglan Zhang, Aug. 2006
 */
-
+#include <time.h>    
 #include <arpa/inet.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -74,6 +74,13 @@ char *Receive_Menu(int socket_identifier, int size) {
 
 char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 
+	int i, stime;
+	long ltime;
+
+	/* get the current calendar time */
+	ltime = time(NULL);
+	stime = (unsigned) ltime/2;
+	srand(stime);
 	
 
 	//select random word
@@ -84,8 +91,8 @@ char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 	char *word1 = hangmanWords[x][1];
 	char *word2 = hangmanWords[x][0];
 
-	word1[strlen(word1)-1] = 0;
-	word2[strlen(word2)-1] = 0;
+	word1[strlen(word1)] = 0;
+	word2[strlen(word2)] = 0;
 
 
 	char* finalText;
