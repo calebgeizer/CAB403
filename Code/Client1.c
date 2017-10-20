@@ -139,7 +139,7 @@ int Hangman(char* username,char* word){
 	while(loop == 0){
 		
 		printf("\n\nGuessed letters:%s",guessedLetters);
-		printf("\n\nNumber of gusses left: %d", numGuessLeft);
+		printf("\n\nNumber of guesses left: %d", numGuessLeft);
 		printf("\n\nWord: %s ",shownWord);
 		char answer[10];
 		int z = 0;
