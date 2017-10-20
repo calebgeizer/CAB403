@@ -29,6 +29,7 @@
 
 	#define BACKLOG 10     /* how many pending connections queue will hold */
 
+void sighandler(int);
 
 struct person 
 {
@@ -36,8 +37,6 @@ struct person
     int won ;
     int played;
 };
-
-
 
 char *Receive_Data(int socket_identifier, int size) {
 	int number_of_bytes, i=0;
@@ -243,7 +242,6 @@ int authUser(char* username){
 	return pos;		
 }
 
-
 int authPass(char* password, int pos){
 	char* authentication[MAXDATASIZE][secondArray];
 	int size = 0;
@@ -286,7 +284,6 @@ char* hangman(){
 
 	return finalText;
 }
-
 char* checkMenu(char* menu) {
 	char *result;
 
@@ -412,6 +409,8 @@ int main(int argc, char *argv[])
 	char *menu;
 	int id = 0;
 
+	signal(SIGINT, sighandler);
+
 	if (argc <= 1)
 	{
 		port = MYPORT;
@@ -484,14 +483,11 @@ int main(int argc, char *argv[])
 					per[id].name = name;
 					//printf("%s person\n", per[id].name);
 				}
-				printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
-
 
 				if (send(new_fd, answer, sizeof(answer), 0) == -1)
 					perror("send");
 
 				
-				printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
 
 			}else{
 
@@ -525,5 +521,9 @@ int main(int argc, char *argv[])
 		
 	}
 	id++;	
-	printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
+}
+
+void sighandler(int signum) {
+   printf("\n\n closing server...\n\n");
+   exit(1);
 }

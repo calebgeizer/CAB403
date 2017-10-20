@@ -30,14 +30,14 @@ char* concat(char* first, char* second){
     return concatinated;
 }
 
-char* Send_Data(int socket_id, char *message) {
+void Send_Data(int socket_id, char *message) {
 	int i=0;
 	char statistics;  
 	int length = strlen(message);
 
 	send(socket_id, message, length, 0);
 }
-char* Send_Menu(int socket_id, char *message) {
+void Send_Menu(int socket_id, char *message) {
 	int i=0;
 	char statistics;  
 	int length = strlen(message);
@@ -141,7 +141,6 @@ int Hangman(char* username,char* word){
 		printf("\n\nGuessed letters:%s",guessedLetters);
 		printf("\n\nNumber of gusses left: %d", numGuessLeft);
 		printf("\n\nWord: %s ",shownWord);
-		printf("\n\nWord: %s ",correct);
 		char answer[10];
 		int z = 0;
 
@@ -169,6 +168,7 @@ int Hangman(char* username,char* word){
 		printf("\nchecking %d", chk);
 
 		if(chk==1) {
+			printf("\n\nWord: %s \n\n",shownWord);
 			printf("\nGame Over");
 			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
 			won = 1;
@@ -215,12 +215,9 @@ int runGame(int socket_id,char* name){
 		printf("\nPlease enter a selection\n<1> Play Hangman\n<2> Show Leaderboard\n<3> Quit\n\nSelection option 1-3 -> " );
 		fgets(choice, 10, stdin);
 		choice[strlen(choice) - 1] = '\0';
-		printf("\n%c\n",choice[0]);
-
 		if(choice[0] == '1'){
 
 		    	//Play Hangman
-			printf("\n%c\n",choice[0]);
 			Send_Data(socket_id, choice);
 
 			if ((numbytes=recv(socket_id, buf, MAXDATASIZE, 0)) == -1) {
@@ -355,12 +352,11 @@ int main(int argc, char *argv[])
 		if (serverResponse[0] == 's')
 		{
 		   	x = 1;
-			printf("successfull login!!\n");
 		}
-
 		else{
-			printf("\n\n\nYou entered either an incorrect username or password\n");
-			sockfd = newRequest(sockfd,he,their_addr, port);		
+			printf("\n\n\nYou entered either an incorrect username or password - disconnecting\n");
+			sockfd = newRequest(sockfd,he,their_addr, port);	
+			exit(1);
 		}
 	}
 
