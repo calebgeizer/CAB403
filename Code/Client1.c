@@ -110,7 +110,7 @@ int checker(char first[], char second[]){
 
 int Hangman(char* username,char* word){
 	int won = 0;
-	int x = 0;
+	int loop = 0;
 	int count = 0;
 	int chk;
     //get the number of guesses
@@ -124,7 +124,7 @@ int Hangman(char* username,char* word){
 	correct[strlen(word)] = '\0';
 	
 	char shownWord[strlen(correct)];
-	char *guessedLetters;
+	char guessedLetters[1];
 	
 	for (int i = 0; i < strlen(word); ++i) {
 		if(isalpha(word[i])) {
@@ -145,7 +145,7 @@ int Hangman(char* username,char* word){
 			shownWord[i]=' ';
 		}	
 	}
-	while(x == 0){
+	while(loop == 0){
 		
 		printf("\n\nGuessed letters:%s",guessedLetters);
 		printf("\n\nNumber of gusses left: %d", numGuessLeft);
@@ -177,23 +177,25 @@ int Hangman(char* username,char* word){
 			printf("\nGame Over");
 			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
 			won = 1;
-				x=1;
-				guessedLetters =NULL;
+			loop = 1;
+			memset(guessedLetters, 0, sizeof guessedLetters);
+
 		}
 		if(numGuessLeft == 0){
 			if(chk==1) {
 				printf("\nGame Over");
 				printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
 				won = 1;
-				x=1;
-				guessedLetters =NULL;
+				loop = 1;
+				memset(guessedLetters, 0, sizeof guessedLetters);
 			}
 			else {
 				printf("\nGame Over");			
 				printf("\n\n\nBad luck %s! You have run out of guesses. The Hangman got you!\n",username);	
 				won = 0;
-				x=1;
-				guessedLetters =NULL;	
+				loop = 1;
+				memset(guessedLetters, 0, sizeof guessedLetters);
+	
 			}
 		}
 		

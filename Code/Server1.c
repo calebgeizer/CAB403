@@ -39,8 +39,6 @@ struct person
 
 
 
-
-
 char *Receive_Data(int socket_identifier, int size) {
     int number_of_bytes, i=0;
     uint16_t statistics;
@@ -476,18 +474,18 @@ int main(int argc, char *argv[])
 					perror("send");
 
 				printf("%syes\n", answer);
-				if(answer=="success") {
+				if(strcmp(answer,"success")) {
 					per[id].name = name;
 				}
 			}else{
 				menu_answer = checkMenu(results);
-				if (menu_answer == "1") {
+				if (strcmp(menu_answer,"1")) {
 					per[id].played++;
 				}
 				int len = strlen(menu_answer) +1;
 				//menu_answer =malloc(len);
 				printf("%lu", strlen(menu_answer));
-				if (results = "won") {
+				if (strcmp(results,"won")) {
 					per[id].won++;
 				}
 
