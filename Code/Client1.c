@@ -116,6 +116,8 @@ int Hangman(char* username,char* word){
 	
 	char shownWord[strlen(correct)];
 	char *guessedLetters;
+	guessedLetters[0] = '\0';
+
 	
 	for (int i = 0; i < strlen(word); ++i) {
 		if(isalpha(word[i])) {
