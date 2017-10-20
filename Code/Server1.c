@@ -398,6 +398,7 @@ char* Message(char* message){
 			}
 		}
 	}
+	return user;
 }
 int main(int argc, char *argv[])
 {
@@ -470,22 +471,31 @@ int main(int argc, char *argv[])
 			{
 				answer = checkMessage(results);
 				name = Message(results);
+				printf("%s test\n", name);
+
+				if(answer[0] == 's') {
+					printf("%s name\n", name);
+					per[id].name = name;
+					printf("%s person\n", per[id].name);
+				}
+				printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
+
+
 				if (send(new_fd, answer, sizeof(answer), 0) == -1)
 					perror("send");
 
-				printf("%syes\n", answer);
-				if(strcmp(answer,"success")) {
-					per[id].name = name;
-				}
+				
+				printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
+
 			}else{
 				menu_answer = checkMenu(results);
-				if (strcmp(menu_answer,"1")) {
+				if (strcmp(menu_answer,"1") == 0) {
 					per[id].played++;
 				}
 				int len = strlen(menu_answer) +1;
 				//menu_answer =malloc(len);
 				printf("%lu", strlen(menu_answer));
-				if (strcmp(results,"won")) {
+				if (strcmp(results,"won") == 0) {
 					per[id].won++;
 				}
 
@@ -495,8 +505,8 @@ int main(int argc, char *argv[])
 
 				free(menu_answer);
 			}
+			printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
 			close(new_fd);
-			//printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
 			
 
 			exit(0);
@@ -508,5 +518,5 @@ int main(int argc, char *argv[])
 		
 	}
 	id++;	
-	//printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
+	printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
 }
