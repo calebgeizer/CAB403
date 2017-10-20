@@ -31,62 +31,53 @@ char* concat(char* first, char* second){
 }
 
 char* Send_Data(int socket_id, char *message) {
-    int i=0;
-    char statistics;  
-    /*for (i = 0; i < 2; i++) {
-        printf("%c\n", message[i]);
-        statistics = htons(message[i]);
-        //send(socket_id, &statistics, sizeof(uint16_t), 0);
-    }*/
+	int i=0;
+	char statistics;  
+	int length = strlen(message);
 
-    int length = strlen(message);
-
-    send(socket_id, message, length, 0);
+	send(socket_id, message, length, 0);
 }
 char* Send_Menu(int socket_id, char *message) {
-    int i=0;
-    char statistics;  
-   
+	int i=0;
+	char statistics;  
+	int length = strlen(message);
 
-    int length = strlen(message);
-
-    send(socket_id, message, length, 0);
+	send(socket_id, message, length, 0);
 }
 
-// asks the user to respond
+// asks the user to respond (we don't use the method)
 char* response(){
-    int max = 20;
-    char* name = (char*) malloc(max); /* allocate buffer */
-    char* response;
-    if (name == 0) quit();
+	int max = 20;
+	char* name = (char*) malloc(max); /* allocate buffer */
+	char* response;
+	if (name == 0) quit();
 
-    while (1) { /* skip leading whitespace */
-        int c = getchar();
-        if (c == EOF) break; /* end of file */
-        if (!isspace(c)) {
-             ungetc(c, stdin);
-             break;
-        }
-    }
-
-    int i = 0;
-    while (1) {
-        int c = getchar();
-        if (isspace(c) || c == EOF) { /* at end, add terminating zero */
-            name[i] = 0;
-            break;
-        }
-        name[i] = c;
-        if (i == max - 1) { /* buffer full */
-            max += max;
-            name = (char*) realloc(name, max); /* get a new and larger buffer */
-            if (name == 0) quit();
-        }
-        i++;
-    }
-    response = name;
-    free(name); /* release memory */
-    return response;
+	while (1) { /* skip leading whitespace */
+	int c = getchar();
+	if (c == EOF) break; /* end of file */
+	if (!isspace(c)) {
+	     ungetc(c, stdin);
+	     break;
+	}
+	}
+	int i = 0;
+	while (1) {
+	int c = getchar();
+	if (isspace(c) || c == EOF) { /* at end, add terminating zero */
+	    name[i] = 0;
+	    break;
+	}
+	name[i] = c;
+	if (i == max - 1) { /* buffer full */
+	    max += max;
+	    name = (char*) realloc(name, max); /* get a new and larger buffer */
+	    if (name == 0) quit();
+	}
+	i++;
+	}
+	response = name;
+	free(name); /* release memory */
+	return response;
 }
 
 // Sends the server a message and gets a response
@@ -113,7 +104,7 @@ int Hangman(char* username,char* word){
 	int loop = 0;
 	int count = 0;
 	int chk;
-    //get the number of guesses
+    	//get the number of guesses
 	int numGuessLeft = strlen(word)-1 + 10;
 
 	if(numGuessLeft > 26){
@@ -153,6 +144,7 @@ int Hangman(char* username,char* word){
 		printf("\n\nWord: %s ",correct);
 		char answer[10];
 		int z = 0;
+
 		while(z == 0){
 			printf("\n\nEnter your guess - ");
 			fgets(answer, 10, stdin);
@@ -161,11 +153,13 @@ int Hangman(char* username,char* word){
 			}
 		}
 		answer[strlen(answer) - 1] = '\0';
+
 		for (int i =0; i < strlen(correct); ++i) {
 			if(answer[0] == correct[i]) {
 				shownWord[i] = answer[0];
 			}
 		}
+
 		guessedLetters[count] = answer[0];
 		numGuessLeft--;
 		count++;
@@ -173,6 +167,7 @@ int Hangman(char* username,char* word){
 		printf("\n\n-------------------------------------------\n");
 		chk=checker(shownWord,correct);
 		printf("\nchecking %d", chk);
+
 		if(chk==1) {
 			printf("\nGame Over");
 			printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
@@ -181,7 +176,9 @@ int Hangman(char* username,char* word){
 			memset(guessedLetters, 0, sizeof guessedLetters);
 
 		}
+
 		if(numGuessLeft == 0){
+
 			if(chk==1) {
 				printf("\nGame Over");
 				printf("\n\n\nWell done %s! You won this round of Hangman!\n",username);
@@ -189,6 +186,7 @@ int Hangman(char* username,char* word){
 				loop = 1;
 				memset(guessedLetters, 0, sizeof guessedLetters);
 			}
+
 			else {
 				printf("\nGame Over");			
 				printf("\n\n\nBad luck %s! You have run out of guesses. The Hangman got you!\n",username);	
@@ -209,8 +207,8 @@ int runGame(int socket_id,char* name){
 	char buf[MAXDATASIZE];
 	int numbytes;
 	int quit;
-	
 	int x = 0;
+
    	while(x == 0){
 
 		printf("\n\n\n\nWelcome to the Hangman Gaming System\n\n\n\n");
@@ -218,32 +216,30 @@ int runGame(int socket_id,char* name){
 		fgets(choice, 10, stdin);
 		choice[strlen(choice) - 1] = '\0';
 		printf("\n%c\n",choice[0]);
+
 		if(choice[0] == '1'){
-		    //Play Hangman
+
+		    	//Play Hangman
 			printf("\n%c\n",choice[0]);
 			Send_Data(socket_id, choice);
 
 			if ((numbytes=recv(socket_id, buf, MAXDATASIZE, 0)) == -1) {
 	        	perror("recv");
 	        	exit(1);
-	    	}
+	    		}
+
 			buf[strlen(buf)] = '\0';
-			
-
-			
 			char* word = buf;
-
 			word[strlen(word)] = '\0';
-
-			
 			int won = Hangman(name, word);
 			x = 1;
 			quit = 3;
-			if (won == 1)
-			{
+
+			if (won == 1){
 				quit = 2;
 			}
 		}
+
 		else if(choice[0] == '2'){
 		    //Show Leaderboard
 			printf("LEADERBOARD\n");
@@ -251,6 +247,7 @@ int runGame(int socket_id,char* name){
 			x =1;
 			quit = 0;
 		}
+
 		else if(choice[0] == '3'){
 		    //Quit
 			printf("QUIT\n");
@@ -258,6 +255,7 @@ int runGame(int socket_id,char* name){
 			x =1;
 		    quit = 1;
 		}
+
 		else {
 			printf("Please enter a valid number 1 -3\n");	
 		}
@@ -326,6 +324,8 @@ int main(int argc, char *argv[])
 
 
 	printf("===========================================\n\n\nWelcome to the Online Hangman Gaming System\n\n\n===========================================");
+	
+
 	//logon
 	
 	
@@ -343,20 +343,22 @@ int main(int argc, char *argv[])
 		char *passwordMessage = concat("b",text);
 
 		passwordMessage = concat(passwordMessage,username);
-		printf("%s\n", passwordMessage);
 		Send_Data(sockfd, passwordMessage);
 		
 		if ((numbytes=recv(sockfd, buf, MAXDATASIZE, 0)) == -1) {
-        	perror("recv");
-        	
+        		perror("recv");
     		}
 		
 		char *serverResponse = buf;
-		printf("%s\n", serverResponse);
+		
+
 		if (serverResponse[0] == 's')
 		{
-		    x = 1;
-		}else{
+		   	x = 1;
+			printf("successfull login!!\n");
+		}
+
+		else{
 			printf("\n\n\nYou entered either an incorrect username or password\n");
 			sockfd = newRequest(sockfd,he,their_addr, port);		
 		}
@@ -377,12 +379,14 @@ int main(int argc, char *argv[])
 			sockfd = newRequest(sockfd,he,their_addr, port);
 			Send_Data(sockfd, "won");
 		}
+
 		if (result == 3)
 		{
 			//Game Lost Send
 			sockfd = newRequest(sockfd,he,their_addr, port);
 			Send_Data(sockfd, "lost");
 		}
+
 		if (result == 1)
 		{
 			x = 1;

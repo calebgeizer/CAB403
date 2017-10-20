@@ -40,15 +40,14 @@ struct person
 
 
 char *Receive_Data(int socket_identifier, int size) {
-    int number_of_bytes, i=0;
-    uint16_t statistics;
+	int number_of_bytes, i=0;
+	uint16_t statistics;
 
-    
-    int sockfd, numbytes, port;
+
+	int sockfd, numbytes, port;
 	char buf[MAXDATASIZE];
 	struct hostent *he;
 	struct sockaddr_in their_addr; /* connector's address information*/
-	//
 
 	if ((numbytes=recv(socket_identifier, buf, MAXDATASIZE, 0)) == -1) {
 		perror("recv");
@@ -61,24 +60,18 @@ char *Receive_Data(int socket_identifier, int size) {
 	return results;
 }
 char *Receive_Menu(int socket_identifier, int size) {
-    int number_of_bytes, i=0;
-    uint16_t statistics;
+	int number_of_bytes, i=0;
 
-    
-    int sockfd, numbytes, port;
+	int sockfd, numbytes, port;
 	char buf[MAXDATASIZE];
 	struct hostent *he;
 	struct sockaddr_in their_addr; /* connector's address information*/
-	//
-
 	if ((numbytes=recv(socket_identifier, buf, MAXDATASIZE, 0)) == -1) {
 		perror("recv");
 		exit(1);
 	}
-
 	buf[numbytes] = '\0';
 	char *results = buf;
-
 	return results;
 }
 
@@ -115,24 +108,21 @@ void leaderboards(){
 }
 
 char* concat(char* first, char* second){
-    char* concatinated;
-    concatinated = malloc(strlen(first)+strlen(second)); /* make space for the new string (should check the return value ...) */
-    strcpy(concatinated, first); /* copy name into the new var */
-    strcat(concatinated, second); /* add the extension */
-    return concatinated;
+	char* concatinated;
+	concatinated = malloc(strlen(first)+strlen(second)); /* make space for the new string (should check the return value ...) */
+	strcpy(concatinated, first); /* copy name into the new var */
+	strcat(concatinated, second); /* add the extension */
+	return concatinated;
 }
 
 char* twoWords(char *hangmanWords[MAXDATASIZE][secondArray],int size){
 
 	int i, stime;
 	long ltime;
-
 	/* get the current calendar time */
 	ltime = time(NULL);
 	stime = (unsigned) ltime/2;
 	srand(stime);
-	
-
 	//select random word
 	int x = rand() % size;
 	int y = rand() % size;
@@ -167,23 +157,27 @@ int grabFile(char* result[MAXDATASIZE][secondArray],char* filename, char* firstD
 
 	for (int i = 0; i < 1000; ++i)
 	{
+		
 		if (fgets(buf,1000, ptr_file)!=NULL)
 		{
 			data[i]=strndup(buf,50);
 			size++;
 		}
 	}
+
 	for (int i = 1; i < size; ++i)
 	{
 		int length = sizeof(data[i]);
 		char *input;
 		input = data[i];
-		token1=strtok(input,firstDelim);	
+		token1=strtok(input,firstDelim);
+	
 		if(token1){
 			result[i][j]=token1;
 			j++;
 		}	
 		token1 =strtok(NULL,secondDelim);
+
 		if (token1)
 		{
 			result[i][j]=token1;
@@ -202,11 +196,13 @@ int count(char* text){
 		
 	for (int i = 0; i < sizeof(text); ++i)
 	{
+
 		if (isalpha(text[i]))
 		{
 			size++;
 		}
 	}
+
 	return size;
 }
 
@@ -253,19 +249,16 @@ int authPass(char* password, int pos){
 	int size = 0;
 	int success = 0;
 	char finalPass[6];
-
 	size = grabFile(authentication,"Authentication.txt","\t","\n");
-
 	char *currentPassword = authentication[pos][1];
-
 	while (isspace(*currentPassword))
 		++currentPassword;
-	
 	int count = 0;
 
 	//check character similarity
 	for (int j = 0; j < 6; ++j)
 	{
+
 		if(currentPassword[j] == password[j]){
 			count++;
 		}
@@ -275,6 +268,7 @@ int authPass(char* password, int pos){
 	{
 		success = 1;
 	}
+
 	return success;			
 }
 
@@ -295,14 +289,17 @@ char* hangman(){
 
 char* checkMenu(char* menu) {
 	char *result;
+
 	if(menu[0] == '1'){
 		printf("Play Hangman\n");
 		result = hangman();
 	}
+
 	if(menu[0] == '2'){
 		printf("Show Leaderboard\n");
 		leaderboards();
 	}
+
 	if(menu[0] == '3'){
 		printf("Quit\n");
 	}
@@ -335,10 +332,12 @@ char* checkMessage(char* message){
 
 		for (int i = 0; i < 7; ++i)
 		{
+
 			if (i < 6)
 			{
 				pass[i] = text[i];
 			}
+
 			if (i == 6)
 			{
 				pass[i] = '\0';
@@ -388,16 +387,19 @@ char* Message(char* message){
 
 		for (int i = 0; i < 7; ++i)
 		{
+
 			if (i < 6)
 			{
 				pass[i] = text[i];
 			}
+
 			if (i == 6)
 			{
 				pass[i] = '\0';
 			}
 		}
 	}
+
 	return user;
 }
 int main(int argc, char *argv[])
@@ -409,6 +411,7 @@ int main(int argc, char *argv[])
 	char *results;
 	char *menu;
 	int id = 0;
+
 	if (argc <= 1)
 	{
 		port = MYPORT;
@@ -417,7 +420,8 @@ int main(int argc, char *argv[])
 	if (argc > 1)
 	{
 		port = atoi(argv[1]);
-	}else port = MYPORT;
+	}
+	else port = MYPORT;
 
 	/* generate the socket */
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -451,6 +455,7 @@ int main(int argc, char *argv[])
 	/* for every accepted connection, use a sepetate process or thread to serve it */
 	while(1) {  /* main accept() loop */
 		sin_size = sizeof(struct sockaddr_in);
+
 		if ((new_fd = accept(sockfd, (struct sockaddr *)&their_addr, \
 		&sin_size)) == -1) {
 			perror("accept");
@@ -458,10 +463,11 @@ int main(int argc, char *argv[])
 		}
 		printf("server: got connection from %s\n", \
 			inet_ntoa(their_addr.sin_addr));
+
 		if (!fork()) { /* this is the child process */
 
 			results = Receive_Data(new_fd,  ARRAY_SIZE);
-			printf("%s ok\n", results);
+			printf("%s -Client sent\n", results);
 			
 			char* answer;
 			char* menu_answer;
@@ -471,12 +477,12 @@ int main(int argc, char *argv[])
 			{
 				answer = checkMessage(results);
 				name = Message(results);
-				printf("%s test\n", name);
+				
 
 				if(answer[0] == 's') {
-					printf("%s name\n", name);
+					printf("%s accessing\n", name);
 					per[id].name = name;
-					printf("%s person\n", per[id].name);
+					//printf("%s person\n", per[id].name);
 				}
 				printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
 
@@ -488,6 +494,7 @@ int main(int argc, char *argv[])
 				printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
 
 			}else{
+
 				menu_answer = checkMenu(results);
 				if (strcmp(menu_answer,"1") == 0) {
 					per[id].played++;
@@ -495,6 +502,7 @@ int main(int argc, char *argv[])
 				int len = strlen(menu_answer) +1;
 				//menu_answer =malloc(len);
 				printf("%lu", strlen(menu_answer));
+
 				if (strcmp(results,"won") == 0) {
 					per[id].won++;
 				}
@@ -502,13 +510,12 @@ int main(int argc, char *argv[])
 				if (send(new_fd, menu_answer, len, 0) == -1)
 					perror("send");
 
-
 				free(menu_answer);
-			}
-			printf("\n%s%d%d",per[0].name,per[0].won,per[0].played);
-			close(new_fd);
-			
 
+			}
+
+			
+			close(new_fd);
 			exit(0);
 		}
 		
